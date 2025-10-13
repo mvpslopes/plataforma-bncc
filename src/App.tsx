@@ -3,9 +3,12 @@ import { AuthProvider, useAuth } from './contexts/LocalAuthContext';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
+import UserManagement from './pages/UserManagement';
+import { Reports } from './pages/Reports';
 
 function AppContent() {
   const [showLogin, setShowLogin] = useState(false);
+  const [currentPage, setCurrentPage] = useState<'dashboard' | 'user-management' | 'reports'>('dashboard');
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -17,7 +20,30 @@ function AppContent() {
   }
 
   if (user) {
-    return <Dashboard />;
+    // Renderizar página baseada no role e página atual
+    if (user.role === 'admin' && currentPage === 'user-management') {
+      return (
+        <UserManagement 
+          onBackToDashboard={() => setCurrentPage('dashboard')}
+        />
+      );
+    }
+
+    if (user.role === 'admin' && currentPage === 'reports') {
+      return (
+        <Reports 
+          onBackToDashboard={() => setCurrentPage('dashboard')}
+        />
+      );
+    }
+    
+    return (
+      <Dashboard 
+        onNavigateToUserManagement={() => setCurrentPage('user-management')}
+        onNavigateToReports={() => setCurrentPage('reports')}
+        userRole={user.role}
+      />
+    );
   }
 
   if (showLogin) {

@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, Monitor, Smartphone, Filter, Search, Brain, Globe, Users } from 'lucide-react';
+import { BookOpen, Monitor, Smartphone, Filter, Search, Brain, Globe, Users, Eye, Download } from 'lucide-react';
 import { useAuth } from '../contexts/LocalAuthContext';
 import { Activity, SchoolYear, BNCCAxis } from '../types/bncc';
+import { SecurePDFViewer } from '../components/SecurePDFViewer';
+import { activityLogger } from '../services/ActivityLogger';
 
 const typeIcons = {
   plugada: Monitor,
@@ -38,13 +40,15 @@ export const Activities = () => {
     getActivities, 
     getActivitiesByYear, 
     getActivitiesByType, 
-    getActivitiesByAxis 
+    getActivitiesByAxis,
+    user
   } = useAuth();
   
   const [selectedYear, setSelectedYear] = useState<string>('all');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [selectedAxis, setSelectedAxis] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedPDF, setSelectedPDF] = useState<{ url: string; title: string } | null>(null);
 
   const schoolYears = getSchoolYears();
   const axes = getBNCCAxes();
@@ -78,10 +82,57 @@ export const Activities = () => {
     );
   }
 
+  const handleViewPDF = (activity: Activity) => {
+    if (activity.document_url && user) {
+      setSelectedPDF({ url: activity.document_url, title: activity.title });
+      // Log da visualização da atividade
+      activityLogger.logViewActivity(user.id, user.name, user.email, activity.id, activity.title);
+    }
+  };
+
+  const handleDownloadPDF = (activity: Activity) => {
+    if (activity.document_url && user?.role === 'admin') {
+      const link = document.createElement('a');
+      link.href = activity.document_url;
+      link.download = activity.title;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Log do download
+      activityLogger.logDownload(user.id, user.name, user.email, 'activity', activity.id, activity.title);
+    }
+  };
+
   const getAxisName = (axisId: string) => {
     const axis = axes.find(a => a.id === axisId);
     return axis ? axis.name : axisId;
   };
+
+  // Log de pesquisa com debounce
+  useEffect(() => {
+    if (searchTerm && user) {
+      const timeoutId = setTimeout(() => {
+        activityLogger.logSearch(user.id, user.name, user.email, searchTerm);
+      }, 1000); // Debounce de 1 segundo
+      
+      return () => clearTimeout(timeoutId);
+    }
+  }, [searchTerm, user]);
+
+  // Log de filtros
+  useEffect(() => {
+    if (selectedYear && user) {
+      activityLogger.logFilter(user.id, user.name, user.email, 'Ano Escolar', selectedYear);
+    }
+  }, [selectedYear, user]);
+
+  useEffect(() => {
+    if (selectedAxis && user) {
+      activityLogger.logFilter(user.id, user.name, user.email, 'Eixo BNCC', getAxisName(selectedAxis));
+    }
+  }, [selectedAxis, user]);
 
   const getAxisIcon = (axisId: string) => {
     const axisIcons = {
@@ -293,9 +344,24 @@ export const Activities = () => {
                       </button>
                     )}
                     {activity.document_url && (
-                      <button className="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm">
-                        Baixar PDF
-                      </button>
+                      <div className="flex gap-2">
+                        <button 
+                          onClick={() => handleViewPDF(activity)}
+                          className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm flex items-center justify-center gap-1"
+                        >
+                          <Eye className="w-4 h-4" />
+                          Visualizar
+                        </button>
+                        {user?.role === 'admin' && (
+                          <button 
+                            onClick={() => handleDownloadPDF(activity)}
+                            className="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm flex items-center justify-center gap-1"
+                          >
+                            <Download className="w-4 h-4" />
+                            Baixar
+                          </button>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -320,6 +386,16 @@ export const Activities = () => {
           </motion.div>
         )}
       </div>
+
+      {/* PDF Viewer Modal */}
+      {selectedPDF && (
+        <SecurePDFViewer
+          pdfUrl={selectedPDF.url}
+          title={selectedPDF.title}
+          onClose={() => setSelectedPDF(null)}
+          allowDownload={user?.role === 'admin'}
+        />
+      )}
     </div>
   );
 };

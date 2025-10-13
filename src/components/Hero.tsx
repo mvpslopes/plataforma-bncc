@@ -47,7 +47,7 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#004a7a'}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#005a93'}
             >
-              <span>Acesse Agora</span>
+              <span>Quero Conhecer</span>
               <ArrowRight className="w-5 h-5" />
             </motion.button>
           </motion.div>

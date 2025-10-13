@@ -1,4 +1,4 @@
-import { SchoolYear, BNCCAxis, KnowledgeObject, Skill, Activity, VideoCourse, Document } from '../types/bncc';
+import { SchoolYear, BNCCAxis, KnowledgeObject, Skill, Activity, VideoCourse, Document, User } from '../types/bncc';
 
 // Anos escolares conforme BNCC
 export const schoolYears: SchoolYear[] = [
@@ -258,7 +258,7 @@ export const activities: Activity[] = [
       'Trabalhar em equipe'
     ],
     thumbnail_url: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=225&fit=crop&crop=center',
-    document_url: 'https://example.com/sequencia-acoes.pdf',
+    document_url: '/sample-bncc-activity.pdf',
     created_at: new Date().toISOString()
   },
   {
@@ -279,7 +279,7 @@ export const activities: Activity[] = [
       'Aplicar pensamento sistemático'
     ],
     thumbnail_url: 'https://images.unsplash.com/photo-1596496050827-8299e0220de1?w=400&h=225&fit=crop&crop=center',
-    document_url: 'https://example.com/decomposicao-problemas.pdf',
+    document_url: 'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf',
     created_at: new Date().toISOString()
   },
   
@@ -303,7 +303,7 @@ export const activities: Activity[] = [
     ],
     thumbnail_url: 'https://images.unsplash.com/photo-1596496050827-8299e0220de1?w=400&h=225&fit=crop&crop=center',
     video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    document_url: 'https://example.com/scratch-jr-guia.pdf',
+    document_url: 'https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-file.pdf',
     created_at: new Date().toISOString()
   },
   {
@@ -325,7 +325,7 @@ export const activities: Activity[] = [
     ],
     thumbnail_url: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=225&fit=crop&crop=center',
     video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    document_url: 'https://example.com/lego-wedo-manual.pdf',
+    document_url: 'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf',
     created_at: new Date().toISOString()
   },
   {
@@ -347,7 +347,7 @@ export const activities: Activity[] = [
     ],
     thumbnail_url: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=225&fit=crop&crop=center',
     video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    document_url: 'https://example.com/seguranca-digital.pdf',
+    document_url: 'https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-file.pdf',
     created_at: new Date().toISOString()
   }
 ];
@@ -395,7 +395,7 @@ export const documents: Document[] = [
     id: 'doc001',
     title: 'Guia BNCC - Pensamento Computacional',
     description: 'Diretrizes oficiais para implementar pensamento computacional',
-    file_url: 'https://example.com/guia-bncc-pensamento.pdf',
+    file_url: '/guia-bncc-pensamento-computacional.pdf',
     file_type: 'pdf',
     schoolYears: ['1ano', '2ano', '3ano', '4ano', '5ano', '6ano', '7ano', '8ano', '9ano'],
     activities: ['atv001', 'atv002'],
@@ -405,7 +405,7 @@ export const documents: Document[] = [
     id: 'doc002',
     title: 'Atividades Desplugadas - Anos Iniciais',
     description: 'Coleção de atividades sem uso de tecnologia',
-    file_url: 'https://example.com/atividades-desplugadas.pdf',
+    file_url: 'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf',
     file_type: 'pdf',
     schoolYears: ['1ano', '2ano', '3ano', '4ano', '5ano'],
     activities: ['atv001', 'atv002'],
@@ -415,7 +415,7 @@ export const documents: Document[] = [
     id: 'doc003',
     title: 'Manual Scratch Jr - Educação Infantil',
     description: 'Guia completo para usar Scratch Jr com crianças pequenas',
-    file_url: 'https://example.com/manual-scratch-jr.pdf',
+    file_url: 'https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-file.pdf',
     file_type: 'pdf',
     schoolYears: ['ei', '1ano', '2ano'],
     activities: ['atv003'],
@@ -425,7 +425,7 @@ export const documents: Document[] = [
     id: 'doc004',
     title: 'Robótica LEGO - Anos Finais',
     description: 'Manual para implementar robótica com LEGO WeDo',
-    file_url: 'https://example.com/robotica-lego.pdf',
+    file_url: 'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf',
     file_type: 'pdf',
     schoolYears: ['4ano', '5ano', '6ano', '7ano', '8ano', '9ano'],
     activities: ['atv004'],
@@ -435,10 +435,90 @@ export const documents: Document[] = [
     id: 'doc005',
     title: 'Segurança Digital - Guia do Professor',
     description: 'Orientações para ensinar segurança digital',
-    file_url: 'https://example.com/seguranca-digital-professor.pdf',
+    file_url: 'https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-file.pdf',
     file_type: 'pdf',
     schoolYears: ['6ano', '7ano', '8ano', '9ano'],
     activities: ['atv005'],
     created_at: new Date().toISOString()
   }
 ];
+
+// Usuários fictícios para teste
+export const users: User[] = [
+  {
+    id: 'admin001',
+    name: 'Raphael Silva de Vasconcelos',
+    email: 'admin@plataformabncc.com',
+    role: 'admin',
+    school: 'Sistema Educacional BNCC',
+    subjects: ['Administração', 'Gestão Educacional'],
+    created_at: new Date('2024-01-15').toISOString(),
+    last_login: new Date().toISOString(),
+    is_active: true
+  },
+  {
+    id: 'prof001',
+    name: 'João Carlos Oliveira',
+    email: 'joao.oliveira@escola.com',
+    role: 'professor',
+    school: 'Escola Municipal São José',
+    subjects: ['Matemática', 'Ciências', 'Pensamento Computacional'],
+    created_at: new Date('2024-02-01').toISOString(),
+    last_login: new Date(Date.now() - 86400000).toISOString(), // 1 dia atrás
+    is_active: true
+  },
+  {
+    id: 'prof002',
+    name: 'Ana Beatriz Costa',
+    email: 'ana.costa@escola.com',
+    role: 'professor',
+    school: 'Colégio Estadual Dom Pedro II',
+    subjects: ['Português', 'História', 'Cultura Digital'],
+    created_at: new Date('2024-02-10').toISOString(),
+    last_login: new Date(Date.now() - 172800000).toISOString(), // 2 dias atrás
+    is_active: true
+  },
+  {
+    id: 'prof003',
+    name: 'Pedro Henrique Lima',
+    email: 'pedro.lima@escola.com',
+    role: 'professor',
+    school: 'Escola Municipal São José',
+    subjects: ['Educação Física', 'Robótica', 'Mundo Digital'],
+    created_at: new Date('2024-02-15').toISOString(),
+    last_login: new Date(Date.now() - 259200000).toISOString(), // 3 dias atrás
+    is_active: true
+  },
+  {
+    id: 'prof004',
+    name: 'Carla Regina Mendes',
+    email: 'carla.mendes@escola.com',
+    role: 'professor',
+    school: 'Colégio Estadual Dom Pedro II',
+    subjects: ['Artes', 'Educação Infantil', 'Pensamento Computacional'],
+    created_at: new Date('2024-02-20').toISOString(),
+    last_login: new Date(Date.now() - 345600000).toISOString(), // 4 dias atrás
+    is_active: true
+  },
+  {
+    id: 'prof005',
+    name: 'Roberto Alves Pereira',
+    email: 'roberto.pereira@escola.com',
+    role: 'professor',
+    school: 'Escola Municipal São José',
+    subjects: ['Geografia', 'Ciências', 'Segurança Digital'],
+    created_at: new Date('2024-02-25').toISOString(),
+    last_login: new Date(Date.now() - 432000000).toISOString(), // 5 dias atrás
+    is_active: false // Usuário inativo para teste
+  }
+];
+
+// Credenciais de login fictícias (em produção, isso seria criptografado)
+export const loginCredentials = {
+  'admin@plataformabncc.com': 'admin123',
+  'joao.oliveira@escola.com': 'prof123',
+  'ana.costa@escola.com': 'prof123',
+  'pedro.lima@escola.com': 'prof123',
+  'carla.mendes@escola.com': 'prof123',
+  'roberto.pereira@escola.com': 'prof123'
+};

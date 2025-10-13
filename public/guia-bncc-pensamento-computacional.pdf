@@ -1,0 +1,171 @@
+%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R 4 0 R]
+/Count 2
+>>
+endobj
+
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 5 0 R
+/Resources <<
+/Font <<
+/F1 6 0 R
+/F2 7 0 R
+>>
+>>
+>>
+endobj
+
+4 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 8 0 R
+/Resources <<
+/Font <<
+/F1 6 0 R
+/F2 7 0 R
+>>
+>>
+>>
+endobj
+
+5 0 obj
+<<
+/Length 800
+>>
+stream
+BT
+/F1 20 Tf
+100 750 Td
+(PLATAFORMA BNCC COMPUTACIONAL) Tj
+0 -40 Td
+/F2 16 Tf
+(Guia de Pensamento Computacional) Tj
+0 -50 Td
+/F1 14 Tf
+(Introdução) Tj
+0 -30 Td
+/F1 12 Tf
+(O pensamento computacional é uma habilidade fundamental) Tj
+0 -20 Td
+(para o século XXI, que envolve a resolução de problemas) Tj
+0 -20 Td
+(de forma sistemática e criativa.) Tj
+0 -40 Td
+/F1 14 Tf
+(Os 4 Pilares do Pensamento Computacional:) Tj
+0 -30 Td
+/F1 12 Tf
+(1. Decomposição - Quebrar problemas em partes menores) Tj
+0 -20 Td
+(2. Reconhecimento de Padrões - Identificar similaridades) Tj
+0 -20 Td
+(3. Abstração - Focar no essencial) Tj
+0 -20 Td
+(4. Algoritmos - Criar sequências de passos) Tj
+0 -40 Td
+/F1 14 Tf
+(Atividades Recomendadas:) Tj
+0 -30 Td
+/F1 12 Tf
+(- Sequências de ações com brincadeiras) Tj
+0 -20 Td
+(- Quebra-cabeças e jogos lógicos) Tj
+0 -20 Td
+(- Programação visual com Scratch Jr) Tj
+0 -20 Td
+(- Robótica educacional) Tj
+ET
+endstream
+endobj
+
+8 0 obj
+<<
+/Length 600
+>>
+stream
+BT
+/F1 14 Tf
+100 750 Td
+(Implementação na Prática) Tj
+0 -40 Td
+/F1 12 Tf
+(Anos Iniciais (1º ao 5º ano):) Tj
+0 -30 Td
+(- Atividades desplugadas) Tj
+0 -20 Td
+(- Jogos e brincadeiras) Tj
+0 -20 Td
+(- Introdução à programação visual) Tj
+0 -40 Td
+/F1 12 Tf
+(Anos Finais (6º ao 9º ano):) Tj
+0 -30 Td
+(- Programação mais avançada) Tj
+0 -20 Td
+(- Robótica e automação) Tj
+0 -20 Td
+(- Projetos interdisciplinares) Tj
+0 -40 Td
+/F1 12 Tf
+(Avaliação:) Tj
+0 -30 Td
+(- Observação do processo) Tj
+0 -20 Td
+(- Portfólios de projetos) Tj
+0 -20 Td
+(- Autoavaliação dos estudantes) Tj
+ET
+endstream
+endobj
+
+6 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica-Bold
+>>
+endobj
+
+7 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000274 00000 n 
+0000001074 00000 n 
+0000001874 00000 n 
+0000001950 00000 n 
+0000002026 00000 n 
+trailer
+<<
+/Size 8
+/Root 1 0 R
+>>
+startxref
+2626
+%%EOF

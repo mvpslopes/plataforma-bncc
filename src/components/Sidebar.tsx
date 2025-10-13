@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
-import { BookOpen, Video, FileText, User, LogOut, Activity } from 'lucide-react';
+import { BookOpen, Video, FileText, User, LogOut, Activity, MessageCircle } from 'lucide-react';
 import { useAuth } from '../contexts/LocalAuthContext';
 
 interface SidebarProps {
-  currentPage: 'activities' | 'videos' | 'documents' | 'profile';
-  onNavigate: (page: 'activities' | 'videos' | 'documents' | 'profile') => void;
+  currentPage: 'activities' | 'videos' | 'documents' | 'profile' | 'community';
+  onNavigate: (page: 'activities' | 'videos' | 'documents' | 'profile' | 'community') => void;
 }
 
 export const Sidebar = ({ currentPage, onNavigate }: SidebarProps) => {
@@ -14,6 +14,7 @@ export const Sidebar = ({ currentPage, onNavigate }: SidebarProps) => {
     { id: 'activities' as const, icon: Activity, label: 'Atividades BNCC' },
     { id: 'videos' as const, icon: Video, label: 'Vídeo Aulas' },
     { id: 'documents' as const, icon: FileText, label: 'Documentos' },
+    { id: 'community' as const, icon: MessageCircle, label: 'Comunidade' },
     { id: 'profile' as const, icon: User, label: 'Perfil' },
   ];
 
@@ -21,7 +22,7 @@ export const Sidebar = ({ currentPage, onNavigate }: SidebarProps) => {
     <motion.aside
       initial={{ x: -300 }}
       animate={{ x: 0 }}
-      className="w-64 bg-white border-r border-gray-200 min-h-screen fixed left-0 top-0"
+      className="w-64 bg-white border-r border-gray-200 min-h-screen fixed left-0 top-16"
     >
       <div className="p-6">
         <div className="flex items-center space-x-2 mb-8">

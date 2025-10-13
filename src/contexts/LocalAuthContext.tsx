@@ -6,7 +6,9 @@ import {
   Skill, 
   Activity, 
   VideoCourse, 
-  Document 
+  Document,
+  User,
+  CreateUserData
 } from '../types/bncc';
 import { 
   schoolYears, 
@@ -15,16 +17,14 @@ import {
   skills, 
   activities, 
   videoCourses, 
-  documents 
+  documents,
+  users,
+  loginCredentials
 } from '../data/bnccData';
+import { activityLogger } from '../services/ActivityLogger';
 
-export interface Profile {
-  id: string;
-  full_name: string;
-  email: string;
+export interface Profile extends User {
   bio?: string;
-  school?: string;
-  created_at: string;
   updated_at: string;
 }
 
@@ -45,6 +45,13 @@ interface AuthContextType {
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: Error | null }>;
+  
+  // User Management (Admin only)
+  getAllUsers: () => User[];
+  createUser: (userData: CreateUserData) => Promise<{ error: Error | null }>;
+  updateUser: (userId: string, updates: Partial<User>) => Promise<{ error: Error | null }>;
+  deleteUser: (userId: string) => Promise<{ error: Error | null }>;
+  toggleUserStatus: (userId: string) => Promise<{ error: Error | null }>;
   
   // BNCC Data
   getSchoolYears: () => SchoolYear[];
@@ -86,22 +93,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Criar usuário de teste se não existir
-    const users = JSON.parse(localStorage.getItem('plataforma-bncc-users') || '[]');
-    if (users.length === 0) {
-      const testUser = {
-        id: '1',
-        full_name: 'Usuário Teste',
-        email: 'teste@exemplo.com',
-        password: '123456',
-        bio: 'Professor interessado em tecnologia educacional',
-        school: 'Escola Municipal de Ensino Fundamental',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-      users.push(testUser);
-      localStorage.setItem('plataforma-bncc-users', JSON.stringify(users));
-    }
+    // Inicializar dados fictícios se não existirem
+    const storedUsers = localStorage.getItem('plataforma-bncc-users');
+    
+    // Sempre forçar a inicialização com todos os usuários
+    const usersWithPasswords = users.map(user => ({
+      ...user,
+      password: loginCredentials[user.email as keyof typeof loginCredentials] || 'prof123',
+      bio: `Professor de ${user.subjects?.join(', ') || 'Educação'}`,
+      updated_at: user.created_at
+    }));
+    localStorage.setItem('plataforma-bncc-users', JSON.stringify(usersWithPasswords));
 
     // Verificar se há usuário logado no localStorage
     const savedUser = localStorage.getItem('plataforma-bncc-user');
@@ -118,21 +120,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       // Simular verificação de credenciais
       const users = JSON.parse(localStorage.getItem('plataforma-bncc-users') || '[]');
+      
       const foundUser = users.find((u: any) => u.email === email && u.password === password);
       
       if (!foundUser) {
         return { error: new Error('Email ou senha incorretos') };
       }
 
+      if (!foundUser.is_active) {
+        return { error: new Error('Usuário inativo. Entre em contato com o administrador.') };
+      }
+
       // Remover senha dos dados do usuário
       const { password: _, ...userData } = foundUser;
       
-      setUser(userData);
-      setProfile(userData);
-      setSession({ user: userData });
+      // Atualizar último login
+      const updatedUser = { ...userData, last_login: new Date().toISOString() };
+      
+      setUser(updatedUser);
+      setProfile(updatedUser);
+      setSession({ user: updatedUser });
       
       // Salvar no localStorage
-      localStorage.setItem('plataforma-bncc-user', JSON.stringify(userData));
+      localStorage.setItem('plataforma-bncc-user', JSON.stringify(updatedUser));
+      
+      // Atualizar último login na lista de usuários
+      const userIndex = users.findIndex((u: any) => u.id === foundUser.id);
+      if (userIndex !== -1) {
+        users[userIndex].last_login = new Date().toISOString();
+        localStorage.setItem('plataforma-bncc-users', JSON.stringify(users));
+      }
+      
+      // Log do login
+      activityLogger.logLogin(updatedUser.id, updatedUser.name, updatedUser.email);
       
       return { error: null };
     } catch (error) {
@@ -171,6 +191,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
+    // Log do logout antes de limpar os dados
+    if (user) {
+      activityLogger.logLogout(user.id, user.name, user.email);
+    }
+    
     setUser(null);
     setProfile(null);
     setSession(null);
@@ -196,6 +221,121 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         users[userIndex] = { ...users[userIndex], ...updates, updated_at: new Date().toISOString() };
         localStorage.setItem('plataforma-bncc-users', JSON.stringify(users));
       }
+      
+      return { error: null };
+    } catch (error) {
+      return { error: error as Error };
+    }
+  };
+
+  // User Management Functions (Admin only)
+  const getAllUsers = () => {
+    const users = JSON.parse(localStorage.getItem('plataforma-bncc-users') || '[]');
+    return users.map((u: any) => {
+      const { password, ...userWithoutPassword } = u;
+      return userWithoutPassword;
+    });
+  };
+
+  const createUser = async (userData: CreateUserData) => {
+    if (!user || user.role !== 'admin') {
+      return { error: new Error('Apenas administradores podem criar usuários') };
+    }
+
+    try {
+      const users = JSON.parse(localStorage.getItem('plataforma-bncc-users') || '[]');
+      
+      // Verificar se email já existe
+      if (users.find((u: any) => u.email === userData.email)) {
+        return { error: new Error('Este email já está cadastrado') };
+      }
+
+      const newUser = {
+        id: Date.now().toString(),
+        name: userData.name,
+        email: userData.email,
+        password: userData.password,
+        role: userData.role,
+        school: userData.school || '',
+        subjects: userData.subjects || [],
+        created_at: new Date().toISOString(),
+        last_login: null,
+        is_active: true,
+        bio: `Professor de ${userData.subjects?.join(', ') || 'Educação'}`,
+        updated_at: new Date().toISOString()
+      };
+
+      users.push(newUser);
+      localStorage.setItem('plataforma-bncc-users', JSON.stringify(users));
+      
+      return { error: null };
+    } catch (error) {
+      return { error: error as Error };
+    }
+  };
+
+  const updateUser = async (userId: string, updates: Partial<User>) => {
+    if (!user || user.role !== 'admin') {
+      return { error: new Error('Apenas administradores podem editar usuários') };
+    }
+
+    try {
+      const users = JSON.parse(localStorage.getItem('plataforma-bncc-users') || '[]');
+      const userIndex = users.findIndex((u: any) => u.id === userId);
+      
+      if (userIndex === -1) {
+        return { error: new Error('Usuário não encontrado') };
+      }
+
+      users[userIndex] = { ...users[userIndex], ...updates, updated_at: new Date().toISOString() };
+      localStorage.setItem('plataforma-bncc-users', JSON.stringify(users));
+      
+      return { error: null };
+    } catch (error) {
+      return { error: error as Error };
+    }
+  };
+
+  const deleteUser = async (userId: string) => {
+    if (!user || user.role !== 'admin') {
+      return { error: new Error('Apenas administradores podem deletar usuários') };
+    }
+
+    if (userId === user.id) {
+      return { error: new Error('Você não pode deletar sua própria conta') };
+    }
+
+    try {
+      const users = JSON.parse(localStorage.getItem('plataforma-bncc-users') || '[]');
+      const filteredUsers = users.filter((u: any) => u.id !== userId);
+      localStorage.setItem('plataforma-bncc-users', JSON.stringify(filteredUsers));
+      
+      return { error: null };
+    } catch (error) {
+      return { error: error as Error };
+    }
+  };
+
+  const toggleUserStatus = async (userId: string) => {
+    if (!user || user.role !== 'admin') {
+      return { error: new Error('Apenas administradores podem alterar status de usuários') };
+    }
+
+    if (userId === user.id) {
+      return { error: new Error('Você não pode desativar sua própria conta') };
+    }
+
+    try {
+      const users = JSON.parse(localStorage.getItem('plataforma-bncc-users') || '[]');
+      const userIndex = users.findIndex((u: any) => u.id === userId);
+      
+      if (userIndex === -1) {
+        return { error: new Error('Usuário não encontrado') };
+      }
+
+      users[userIndex].is_active = !users[userIndex].is_active;
+      users[userIndex].updated_at = new Date().toISOString();
+      localStorage.setItem('plataforma-bncc-users', JSON.stringify(users));
       
       return { error: null };
     } catch (error) {
@@ -288,6 +428,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     signUp,
     signOut,
     updateProfile,
+    
+    // User Management (Admin only)
+    getAllUsers,
+    createUser,
+    updateUser,
+    deleteUser,
+    toggleUserStatus,
     
     // BNCC Data
     getSchoolYears,

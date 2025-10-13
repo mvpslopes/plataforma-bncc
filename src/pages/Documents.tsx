@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FileText, Download, File, BookOpen } from 'lucide-react';
+import { FileText, Download, File, BookOpen, Eye } from 'lucide-react';
 import { useAuth } from '../contexts/LocalAuthContext';
 import { Document } from '../types/bncc';
+import { SecurePDFViewer } from '../components/SecurePDFViewer';
+import { activityLogger } from '../services/ActivityLogger';
 
 const fileTypeIcons = {
   pdf: '📄',
@@ -17,10 +19,11 @@ const fileTypeColors = {
 };
 
 export const Documents = () => {
-  const { getDocuments, getSchoolYears } = useAuth();
+  const { getDocuments, getSchoolYears, user } = useAuth();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
+  const [selectedPDF, setSelectedPDF] = useState<{ url: string; title: string } | null>(null);
 
   useEffect(() => {
     loadDocuments();
@@ -42,6 +45,39 @@ export const Documents = () => {
   const filteredDocuments = filter === 'all'
     ? documents
     : documents.filter(d => d.schoolYears.includes(filter));
+
+  const handleViewPDF = (doc: Document) => {
+    if (doc.file_type === 'pdf') {
+      setSelectedPDF({ url: doc.file_url, title: doc.title });
+      // Log da visualização do documento
+      if (user) {
+        activityLogger.logViewDocument(user.id, user.name, user.email, doc.id, doc.title);
+      }
+    } else {
+      // Para outros tipos de arquivo, abrir em nova aba
+      window.open(doc.file_url, '_blank');
+      // Log da visualização do documento
+      if (user) {
+        activityLogger.logViewDocument(user.id, user.name, user.email, doc.id, doc.title);
+      }
+    }
+  };
+
+  const handleDownload = (doc: Document) => {
+    // Apenas administradores podem baixar
+    if (user?.role === 'admin') {
+      const link = document.createElement('a');
+      link.href = doc.file_url;
+      link.download = doc.title;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Log do download
+      activityLogger.logDownload(user.id, user.name, user.email, 'document', doc.id, doc.title);
+    }
+  };
 
   if (loading) {
     return (
@@ -137,10 +173,24 @@ export const Documents = () => {
                     <span className={`px-2 py-1 rounded text-xs font-medium ${fileTypeColors[doc.file_type]}`}>
                       {doc.file_type.toUpperCase()}
                     </span>
-                    <button className="flex items-center gap-1 text-sky-600 hover:text-sky-700 text-sm font-medium">
-                      <Download className="w-4 h-4" />
-                      Baixar
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={() => handleViewPDF(doc)}
+                        className="flex items-center gap-1 text-blue-600 hover:text-blue-700 text-sm font-medium"
+                      >
+                        <Eye className="w-4 h-4" />
+                        {doc.file_type === 'pdf' ? 'Visualizar' : 'Abrir'}
+                      </button>
+                      {user?.role === 'admin' && (
+                        <button 
+                          onClick={() => handleDownload(doc)}
+                          className="flex items-center gap-1 text-sky-600 hover:text-sky-700 text-sm font-medium"
+                        >
+                          <Download className="w-4 h-4" />
+                          Baixar
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -164,6 +214,16 @@ export const Documents = () => {
           </motion.div>
         )}
       </div>
+
+      {/* PDF Viewer Modal */}
+      {selectedPDF && (
+        <SecurePDFViewer
+          pdfUrl={selectedPDF.url}
+          title={selectedPDF.title}
+          onClose={() => setSelectedPDF(null)}
+          allowDownload={user?.role === 'admin'}
+        />
+      )}
     </div>
   );
 };
