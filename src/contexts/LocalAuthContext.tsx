@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { useInactivityTimer } from '../hooks/useInactivityTimer';
+import { InactivityWarning } from '../components/InactivityWarning';
 import { 
   SchoolYear, 
   BNCCAxis, 
@@ -46,6 +48,12 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: Error | null }>;
   
+  // Inactivity Management
+  showInactivityWarning: boolean;
+  extendSession: () => void;
+  handleInactivityLogout: () => void;
+  getTimeRemaining: () => number;
+  
   // User Management (Admin only)
   getAllUsers: () => User[];
   createUser: (userData: CreateUserData) => Promise<{ error: Error | null }>;
@@ -91,6 +99,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<{ user: Profile } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showInactivityWarning, setShowInactivityWarning] = useState(false);
+
+  // Hook de inatividade - 10 minutos (600000ms)
+  const { getTimeRemaining, resetTimer } = useInactivityTimer({
+    timeout: 10 * 60 * 1000, // 10 minutos
+    onTimeout: () => {
+      setShowInactivityWarning(true);
+    }
+  });
+
+  // Função para estender a sessão
+  const extendSession = () => {
+    setShowInactivityWarning(false);
+    resetTimer();
+  };
+
+  // Função para logout por inatividade
+  const handleInactivityLogout = () => {
+    setShowInactivityWarning(false);
+    signOut();
+  };
 
   useEffect(() => {
     // Inicializar dados fictícios se não existirem
@@ -429,6 +458,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     signOut,
     updateProfile,
     
+    // Inactivity Management
+    showInactivityWarning,
+    extendSession,
+    handleInactivityLogout,
+    getTimeRemaining,
+    
     // User Management (Admin only)
     getAllUsers,
     createUser,
@@ -457,5 +492,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     updateUserProgress,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+      {/* Componente de aviso de inatividade */}
+      {user && (
+        <InactivityWarning
+          isVisible={showInactivityWarning}
+          timeRemaining={getTimeRemaining()}
+          onExtend={extendSession}
+          onLogout={handleInactivityLogout}
+        />
+      )}
+    </AuthContext.Provider>
+  );
 };

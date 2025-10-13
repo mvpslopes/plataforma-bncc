@@ -5,18 +5,16 @@ import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import UserManagement from './pages/UserManagement';
 import { Reports } from './pages/Reports';
+import { LoadingScreen } from './components/LoadingScreen';
 
 function AppContent() {
   const [showLogin, setShowLogin] = useState(false);
   const [currentPage, setCurrentPage] = useState<'dashboard' | 'user-management' | 'reports'>('dashboard');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const { user, loading } = useAuth();
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-sky-600"></div>
-      </div>
-    );
+  if (loading || isLoggingIn) {
+    return <LoadingScreen message={isLoggingIn ? "Entrando no sistema..." : "Carregando plataforma BNCC..."} />;
   }
 
   if (user) {
@@ -50,7 +48,13 @@ function AppContent() {
     return (
       <Login
         onBack={() => setShowLogin(false)}
-        onSuccess={() => setShowLogin(false)}
+        onSuccess={() => {
+          setIsLoggingIn(true);
+          setTimeout(() => {
+            setIsLoggingIn(false);
+            setShowLogin(false);
+          }, 2000); // 2 segundos de carregamento
+        }}
       />
     );
   }
