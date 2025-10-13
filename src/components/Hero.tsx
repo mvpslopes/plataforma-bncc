@@ -87,7 +87,7 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                 <div className="absolute bottom-4 left-4 text-white">
-                  <div className="text-sm font-semibold">Robótica Educacional</div>
+                  <div className="text-sm font-semibold">Mundo Digital</div>
                 </div>
               </div>
             </div>

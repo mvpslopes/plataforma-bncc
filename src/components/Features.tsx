@@ -20,9 +20,9 @@ const features = [
   },
   {
     icon: Bot,
-    title: 'Robótica Educacional',
+    title: 'Mundo Digital',
     description:
-      'Explore conceitos de robótica e programação de forma prática e alinhada com a BNCC.',
+      'Explore conceitos de mundo digital e programação de forma prática e alinhada com a BNCC.',
     color: '#ffbe00',
     bgColor: '#fff9e6',
   },

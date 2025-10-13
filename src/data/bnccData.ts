@@ -149,7 +149,7 @@ export const knowledgeObjects: KnowledgeObject[] = [
   },
   {
     id: 'robotica-educacional',
-    name: 'Robótica Educacional',
+    name: 'Mundo Digital',
     description: 'Construção e programação de robôs',
     axisId: 'mundo-digital',
     schoolYears: ['4ano', '5ano', '6ano', '7ano', '8ano', '9ano']
@@ -367,7 +367,7 @@ export const videoCourses: VideoCourse[] = [
   },
   {
     id: 'curso002',
-    title: 'Robótica Educacional - Anos Finais',
+    title: 'Mundo Digital - Anos Finais',
     description: 'Introdução à robótica para 6º ao 9º ano',
     thumbnail_url: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=225&fit=crop&crop=center',
     video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
