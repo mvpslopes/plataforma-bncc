@@ -142,7 +142,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setProfile(userData);
       setSession({ user: userData });
     }
-    setLoading(false);
+    // Simular carregamento inicial mais longo
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000); // 3 segundos de carregamento inicial
   }, []);
 
   const signIn = async (email: string, password: string) => {

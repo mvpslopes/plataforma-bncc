@@ -53,7 +53,7 @@ function AppContent() {
           setTimeout(() => {
             setIsLoggingIn(false);
             setShowLogin(false);
-          }, 2000); // 2 segundos de carregamento
+          }, 4000); // 4 segundos de carregamento
         }}
       />
     );
