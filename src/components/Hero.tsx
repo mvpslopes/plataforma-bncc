@@ -14,6 +14,8 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
           src="/images/hero/criancas-fazendo-licao-de-casa-em-close-up-de-um-laptop.jpg"
           alt="Crianças usando tecnologia em sala de aula"
           className="w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.style.display = 'none';
@@ -65,6 +67,8 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
                   src="/images/hero/guy-e-garota-estao-sentados-a-mesa-garota-africana-na-aula-de-ciencia-da-computacao-criancas-jogando-jogos-de-computador.jpg"
                   alt="Crianças colaborando com tecnologia"
                   className="w-full h-48 object-cover transition-transform hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = 'https://via.placeholder.com/400x300/f3f4f6/6b7280?text=Educação+Digital';
@@ -80,6 +84,8 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
                   src="/images/hero/criancas-em-filmagem-media-olhando-para-um-tablet.jpg"
                   alt="Crianças programando robôs"
                   className="w-full h-32 object-cover transition-transform hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = 'https://via.placeholder.com/400x300/f3f4f6/6b7280?text=Programação';
@@ -97,6 +103,8 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
                   src="/images/hero/criancas-fazendo-licao-de-casa-em-close-up-de-um-laptop.jpg"
                   alt="Sala de aula moderna com tecnologia"
                   className="w-full h-32 object-cover transition-transform hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = 'https://via.placeholder.com/400x300/f3f4f6/6b7280?text=Sala+Moderna';
@@ -112,6 +120,8 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
                   src="/images/hero/criancas-de-tiro-medio-com-tablet.jpg"
                   alt="Crianças usando tablets"
                   className="w-full h-48 object-cover transition-transform hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = 'https://via.placeholder.com/400x300/f3f4f6/6b7280?text=Tablets';

@@ -278,6 +278,8 @@ export const Activities = () => {
                     src={activity.thumbnail_url}
                     alt={activity.title}
                     className="w-full h-48 object-cover"
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = `https://via.placeholder.com/400x225/4F46E5/FFFFFF?text=${encodeURIComponent(activity.title)}`;

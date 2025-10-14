@@ -131,6 +131,8 @@ export const ClassroomGallery = () => {
                   src={image.src}
                   alt={image.alt}
                   className="w-full h-full object-cover transition-transform hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = 'https://via.placeholder.com/600x400/f3f4f6/6b7280?text=Imagem+Educacional';

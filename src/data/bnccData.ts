@@ -258,7 +258,7 @@ export const activities: Activity[] = [
       'Trabalhar em equipe'
     ],
     thumbnail_url: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=225&fit=crop&crop=center',
-    document_url: '/sample-bncc-activity.pdf',
+    document_url: '/pdf/PDF_Exemplo.pdf',
     created_at: new Date().toISOString()
   },
   {
@@ -279,7 +279,7 @@ export const activities: Activity[] = [
       'Aplicar pensamento sistemático'
     ],
     thumbnail_url: 'https://images.unsplash.com/photo-1596496050827-8299e0220de1?w=400&h=225&fit=crop&crop=center',
-    document_url: 'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf',
+    document_url: '/pdf/PDF_Exemplo.pdf',
     created_at: new Date().toISOString()
   },
   
@@ -303,7 +303,7 @@ export const activities: Activity[] = [
     ],
     thumbnail_url: 'https://images.unsplash.com/photo-1596496050827-8299e0220de1?w=400&h=225&fit=crop&crop=center',
     video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    document_url: 'https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-file.pdf',
+    document_url: '/pdf/PDF_Exemplo.pdf',
     created_at: new Date().toISOString()
   },
   {
@@ -325,7 +325,7 @@ export const activities: Activity[] = [
     ],
     thumbnail_url: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=225&fit=crop&crop=center',
     video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    document_url: 'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf',
+    document_url: '/pdf/PDF_Exemplo.pdf',
     created_at: new Date().toISOString()
   },
   {
@@ -347,7 +347,7 @@ export const activities: Activity[] = [
     ],
     thumbnail_url: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=225&fit=crop&crop=center',
     video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    document_url: 'https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-file.pdf',
+    document_url: '/pdf/PDF_Exemplo.pdf',
     created_at: new Date().toISOString()
   }
 ];
@@ -395,7 +395,7 @@ export const documents: Document[] = [
     id: 'doc001',
     title: 'Guia BNCC - Pensamento Computacional',
     description: 'Diretrizes oficiais para implementar pensamento computacional',
-    file_url: '/guia-bncc-pensamento-computacional.pdf',
+    file_url: '/pdf/PDF_Exemplo.pdf',
     file_type: 'pdf',
     schoolYears: ['1ano', '2ano', '3ano', '4ano', '5ano', '6ano', '7ano', '8ano', '9ano'],
     activities: ['atv001', 'atv002'],
@@ -405,7 +405,7 @@ export const documents: Document[] = [
     id: 'doc002',
     title: 'Atividades Desplugadas - Anos Iniciais',
     description: 'Coleção de atividades sem uso de tecnologia',
-    file_url: 'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf',
+    file_url: '/pdf/PDF_Exemplo.pdf',
     file_type: 'pdf',
     schoolYears: ['1ano', '2ano', '3ano', '4ano', '5ano'],
     activities: ['atv001', 'atv002'],
@@ -415,7 +415,7 @@ export const documents: Document[] = [
     id: 'doc003',
     title: 'Manual Scratch Jr - Educação Infantil',
     description: 'Guia completo para usar Scratch Jr com crianças pequenas',
-    file_url: 'https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-file.pdf',
+    file_url: '/pdf/PDF_Exemplo.pdf',
     file_type: 'pdf',
     schoolYears: ['ei', '1ano', '2ano'],
     activities: ['atv003'],
@@ -425,7 +425,7 @@ export const documents: Document[] = [
     id: 'doc004',
     title: 'Robótica LEGO - Anos Finais',
     description: 'Manual para implementar robótica com LEGO WeDo',
-    file_url: 'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf',
+    file_url: '/pdf/PDF_Exemplo.pdf',
     file_type: 'pdf',
     schoolYears: ['4ano', '5ano', '6ano', '7ano', '8ano', '9ano'],
     activities: ['atv004'],
@@ -435,7 +435,7 @@ export const documents: Document[] = [
     id: 'doc005',
     title: 'Segurança Digital - Guia do Professor',
     description: 'Orientações para ensinar segurança digital',
-    file_url: 'https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-file.pdf',
+    file_url: '/pdf/PDF_Exemplo.pdf',
     file_type: 'pdf',
     schoolYears: ['6ano', '7ano', '8ano', '9ano'],
     activities: ['atv005'],

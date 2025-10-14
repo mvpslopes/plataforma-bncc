@@ -69,7 +69,7 @@ export const communityPosts: CommunityPost[] = [
     attachments: [
       {
         type: 'document',
-        url: '/sample-bncc-activity.pdf',
+        url: '/pdf/PDF_Exemplo.pdf',
         name: 'Material da Atividade - Quebra-cabeça de Algoritmos.pdf'
       }
     ],
