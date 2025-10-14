@@ -27,9 +27,9 @@ export const Header = ({ onLoginClick }: HeaderProps) => {
             </div>
             <div>
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                BNCC
+                Nova
               </span>
-              <span className="text-2xl font-bold text-gray-900 ml-1">Computacional</span>
+              <span className="text-2xl font-bold text-gray-900 ml-1">Edu</span>
             </div>
           </motion.div>
 

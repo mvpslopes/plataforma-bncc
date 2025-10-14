@@ -268,7 +268,7 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
               <div className="flex items-center gap-2">
                 <Award className="w-5 h-5" />
                 <span className="text-sm font-semibold">500+ Atividades</span>
-              </div>
+            </div>
             </motion.div>
 
             {/* Background Glow */}

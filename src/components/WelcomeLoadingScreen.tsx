@@ -94,7 +94,7 @@ export const WelcomeLoadingScreen = ({ message = "Preparando sua jornada educaci
           transition={{ delay: 0.4, duration: 1 }}
           className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
         >
-          BNCC Computacional
+          Nova Edu
         </motion.h1>
 
         <motion.p

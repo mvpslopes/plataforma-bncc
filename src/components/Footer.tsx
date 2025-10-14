@@ -11,7 +11,7 @@ export const Footer = () => {
               <span className="text-xl font-bold text-white">NovaEdu</span>
             </div>
             <p className="text-sm">
-              Formação continuada de professores em BNCC Computacional
+              Formação continuada de professores em Nova Edu
             </p>
           </div>
 

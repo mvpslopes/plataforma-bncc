@@ -83,7 +83,7 @@ export const Login = ({ onBack, onSuccess }: LoginProps) => {
         <p className="text-gray-600 text-center mb-8">
           {isLogin
             ? 'Entre para acessar os cursos e materiais'
-            : 'Comece sua jornada na BNCC Computacional'}
+            : 'Comece sua jornada na Nova Edu'}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">

@@ -165,7 +165,7 @@ export const ClassroomGallery = () => {
             </h3>
             <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
               Junte-se a milhares de educadores que já estão preparando seus alunos 
-              para o futuro digital com a BNCC Computacional
+              para o futuro digital com a Nova Edu
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <div className="flex items-center space-x-2 text-sky-600">
