@@ -124,7 +124,15 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
                 whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={onGetStarted}
-                className="group inline-flex items-center justify-center space-x-3 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 shadow-2xl hover:opacity-90"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#0369a1';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#044982';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+              }}
+                className="group inline-flex items-center justify-center space-x-3 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 shadow-2xl hover:shadow-3xl border-2 border-white border-opacity-20"
                 style={{ backgroundColor: '#044982' }}
               >
                 <span>Começar Agora</span>
