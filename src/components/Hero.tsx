@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Play, Star, Users, Award, Zap, Brain } from 'lucide-react';
 
 interface HeroProps {
   onGetStarted: () => void;
@@ -7,132 +7,283 @@ interface HeroProps {
 
 export const Hero = ({ onGetStarted }: HeroProps) => {
   return (
-    <section className="pt-32 pb-20 px-4 bg-gradient-to-br from-blue-50 to-green-50 relative overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0 opacity-10">
-        <img
-          src="/images/hero/criancas-fazendo-licao-de-casa-em-close-up-de-um-laptop.jpg"
-          alt="Crianças usando tecnologia em sala de aula"
-          className="w-full h-full object-cover"
-          loading="lazy"
-          decoding="async"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.style.display = 'none';
+    <section className="pt-32 pb-20 px-4 bg-gradient-to-br from-indigo-900 via-blue-900 to-purple-900 relative overflow-hidden min-h-screen flex items-center">
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        <motion.div
+          animate={{
+            background: [
+              "radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%)",
+              "radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%)",
+              "radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%)",
+              "radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%)"
+            ]
           }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute inset-0"
         />
+        
+        {/* Floating Elements */}
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-white rounded-full opacity-20"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              opacity: [0.2, 0.8, 0.2],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
       </div>
       
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Text Content */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
             className="text-center lg:text-left"
           >
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 text-center">
-              <div style={{ color: '#005a93' }}>BNCC Computacional</div>
-              <div className="mt-4">Atividades prontas para professores</div>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto lg:mx-0">
-              Plataforma especializada em competências digitais e pensamento computacional
-              para professores da educação básica
-            </p>
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6"
+            >
+              <Star className="w-4 h-4 text-yellow-400" />
+              <span className="text-sm font-medium text-white">Plataforma #1 em Educação Digital</span>
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-5xl md:text-7xl font-bold mb-6"
+            >
+              <div className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                BNCC Computacional
+              </div>
+              <div className="text-white mt-4 text-4xl md:text-5xl">
+                Atividades prontas para professores
+              </div>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+            >
+              Plataforma especializada em <strong className="text-white">competências digitais</strong> e 
+              <strong className="text-white"> pensamento computacional</strong> para professores da educação básica.
+            </motion.p>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="flex flex-wrap gap-6 mb-8 justify-center lg:justify-start"
+            >
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-blue-400" />
+                <span className="text-white font-semibold">10.000+</span>
+                <span className="text-gray-300">Professores</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Award className="w-5 h-5 text-yellow-400" />
+                <span className="text-white font-semibold">500+</span>
+                <span className="text-gray-300">Atividades</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap className="w-5 h-5 text-purple-400" />
+                <span className="text-white font-semibold">100%</span>
+                <span className="text-gray-300">BNCC</span>
+              </div>
+            </motion.div>
+
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+            >
             <motion.button
-              whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={onGetStarted}
-              className="inline-flex items-center space-x-2 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors shadow-lg"
-              style={{ backgroundColor: '#005a93' }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#004a7a'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#005a93'}
-            >
-              <span>Quero Conhecer</span>
-              <ArrowRight className="w-5 h-5" />
+                className="group inline-flex items-center justify-center space-x-3 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 shadow-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500"
+              >
+                <span>Começar Agora</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="group inline-flex items-center justify-center space-x-3 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20"
+              >
+                <Play className="w-5 h-5" />
+                <span>Ver Demonstração</span>
             </motion.button>
+            </motion.div>
           </motion.div>
 
-          {/* Image Gallery */}
+          {/* Photo Gallery */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="grid grid-cols-2 gap-4"
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="relative"
           >
-            <div className="space-y-4">
-              <div className="relative rounded-xl overflow-hidden shadow-lg">
+            {/* Main Photo Grid */}
+            <div className="grid grid-cols-2 gap-4">
+              {/* Large Photo */}
+              <motion.div
+                initial={{ scale: 0.8, rotateY: -15 }}
+                animate={{ scale: 1, rotateY: 0 }}
+                transition={{ duration: 1, delay: 0.6 }}
+                className="col-span-2 relative rounded-2xl overflow-hidden shadow-2xl"
+              >
                 <img
                   src="/images/hero/guy-e-garota-estao-sentados-a-mesa-garota-africana-na-aula-de-ciencia-da-computacao-criancas-jogando-jogos-de-computador.jpg"
                   alt="Crianças colaborando com tecnologia"
-                  className="w-full h-48 object-cover transition-transform hover:scale-105"
+                  className="w-full h-64 object-cover"
                   loading="lazy"
                   decoding="async"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = 'https://via.placeholder.com/400x300/f3f4f6/6b7280?text=Educação+Digital';
+                    target.src = 'https://via.placeholder.com/600x300/f3f4f6/6b7280?text=Educação+Digital';
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                 <div className="absolute bottom-4 left-4 text-white">
-                  <div className="text-sm font-semibold">Aprendizado Colaborativo</div>
+                  <div className="text-lg font-semibold">Aprendizado Colaborativo</div>
+                  <div className="text-sm opacity-90">Tecnologia na educação</div>
                 </div>
-              </div>
-              <div className="relative rounded-xl overflow-hidden shadow-lg">
-                <img
-                  src="/images/hero/criancas-em-filmagem-media-olhando-para-um-tablet.jpg"
-                  alt="Crianças programando robôs"
-                  className="w-full h-32 object-cover transition-transform hover:scale-105"
-                  loading="lazy"
-                  decoding="async"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = 'https://via.placeholder.com/400x300/f3f4f6/6b7280?text=Programação';
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                <div className="absolute bottom-4 left-4 text-white">
-                  <div className="text-sm font-semibold">Mundo Digital</div>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-4 pt-8">
-              <div className="relative rounded-xl overflow-hidden shadow-lg">
-                <img
-                  src="/images/hero/criancas-fazendo-licao-de-casa-em-close-up-de-um-laptop.jpg"
-                  alt="Sala de aula moderna com tecnologia"
-                  className="w-full h-32 object-cover transition-transform hover:scale-105"
-                  loading="lazy"
-                  decoding="async"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = 'https://via.placeholder.com/400x300/f3f4f6/6b7280?text=Sala+Moderna';
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                <div className="absolute bottom-4 left-4 text-white">
-                  <div className="text-sm font-semibold">Ambientes Digitais</div>
-                </div>
-              </div>
-              <div className="relative rounded-xl overflow-hidden shadow-lg">
+              </motion.div>
+
+              {/* Smaller Photos */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+                className="relative rounded-xl overflow-hidden shadow-lg"
+              >
                 <img
                   src="/images/hero/criancas-de-tiro-medio-com-tablet.jpg"
                   alt="Crianças usando tablets"
-                  className="w-full h-48 object-cover transition-transform hover:scale-105"
+                  className="w-full h-32 object-cover"
                   loading="lazy"
                   decoding="async"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = 'https://via.placeholder.com/400x300/f3f4f6/6b7280?text=Tablets';
+                    target.src = 'https://via.placeholder.com/300x200/f3f4f6/6b7280?text=Tablets';
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                <div className="absolute bottom-4 left-4 text-white">
-                  <div className="text-sm font-semibold">Tecnologia na Educação</div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                <div className="absolute bottom-2 left-2 text-white">
+                  <div className="text-sm font-semibold">Tablets</div>
                 </div>
-              </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9 }}
+                className="relative rounded-xl overflow-hidden shadow-lg"
+              >
+                <img
+                  src="/images/hero/criancas-em-filmagem-media-olhando-para-um-tablet.jpg"
+                  alt="Crianças programando"
+                  className="w-full h-32 object-cover"
+                  loading="lazy"
+                  decoding="async"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'https://via.placeholder.com/300x200/f3f4f6/6b7280?text=Programação';
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                <div className="absolute bottom-2 left-2 text-white">
+                  <div className="text-sm font-semibold">Programação</div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.0 }}
+                className="col-span-2 relative rounded-xl overflow-hidden shadow-lg"
+              >
+                <img
+                  src="/images/hero/criancas-fazendo-licao-de-casa-em-close-up-de-um-laptop.jpg"
+                  alt="Sala de aula moderna"
+                  className="w-full h-24 object-cover"
+                  loading="lazy"
+                  decoding="async"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'https://via.placeholder.com/600x150/f3f4f6/6b7280?text=Sala+Moderna';
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                <div className="absolute bottom-2 left-2 text-white">
+                  <div className="text-sm font-semibold">Ambientes Digitais</div>
+                </div>
+              </motion.div>
             </div>
+
+            {/* Floating Cards */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.1 }}
+              className="absolute -top-4 -right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white p-4 rounded-xl shadow-lg"
+            >
+              <div className="flex items-center gap-2">
+                <Brain className="w-5 h-5" />
+                <span className="text-sm font-semibold">IA Assistente</span>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2 }}
+              className="absolute -bottom-4 -left-4 bg-gradient-to-r from-green-500 to-blue-500 text-white p-4 rounded-xl shadow-lg"
+            >
+              <div className="flex items-center gap-2">
+                <Award className="w-5 h-5" />
+                <span className="text-sm font-semibold">500+ Atividades</span>
+              </div>
+            </motion.div>
+
+            {/* Background Glow */}
+            <motion.div
+              animate={{ 
+                scale: [1, 1.1, 1],
+                opacity: [0.3, 0.5, 0.3]
+              }}
+              transition={{ 
+                duration: 4, 
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl"
+            />
           </motion.div>
         </div>
       </div>
