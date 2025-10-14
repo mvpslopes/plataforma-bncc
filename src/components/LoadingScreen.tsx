@@ -14,7 +14,7 @@ export const LoadingScreen = ({ message = "Carregando plataforma BNCC..." }: Loa
   ];
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-blue-600 to-blue-800 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ backgroundColor: '#044982' }}>
       <div className="text-center text-white">
         {/* Logo/Ícone Principal */}
         <motion.div

@@ -7,16 +7,16 @@ interface HeroProps {
 
 export const Hero = ({ onGetStarted }: HeroProps) => {
   return (
-    <section className="pt-32 pb-20 px-4 bg-gradient-to-br from-indigo-900 via-blue-900 to-purple-900 relative overflow-hidden min-h-screen flex items-center">
+    <section className="pt-32 pb-20 px-4 relative overflow-hidden min-h-screen flex items-center" style={{ backgroundColor: '#044982' }}>
       {/* Animated Background */}
       <div className="absolute inset-0">
         <motion.div
           animate={{
             background: [
-              "radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%)",
-              "radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%)",
-              "radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%)",
-              "radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%)"
+              "radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%)",
+              "radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)",
+              "radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%)",
+              "radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%)"
             ]
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
@@ -71,7 +71,7 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
               transition={{ delay: 0.3 }}
               className="text-5xl md:text-7xl font-bold mb-6"
             >
-              <div className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <div className="bg-gradient-to-r from-white via-blue-100 to-blue-200 bg-clip-text text-transparent">
                 BNCC Computacional
               </div>
               <div className="text-white mt-4 text-4xl md:text-5xl">
@@ -83,7 +83,7 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+              className="text-xl text-gray-200 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
             >
               Plataforma especializada em <strong className="text-white">competências digitais</strong> e 
               <strong className="text-white"> pensamento computacional</strong> para professores da educação básica.
@@ -97,17 +97,17 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
               className="flex flex-wrap gap-6 mb-8 justify-center lg:justify-start"
             >
               <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-blue-400" />
+                <Users className="w-5 h-5 text-blue-300" />
                 <span className="text-white font-semibold">10.000+</span>
                 <span className="text-gray-300">Professores</span>
               </div>
               <div className="flex items-center gap-2">
-                <Award className="w-5 h-5 text-yellow-400" />
+                <Award className="w-5 h-5 text-yellow-300" />
                 <span className="text-white font-semibold">500+</span>
                 <span className="text-gray-300">Atividades</span>
               </div>
               <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-purple-400" />
+                <Zap className="w-5 h-5" style={{ color: '#044982' }} />
                 <span className="text-white font-semibold">100%</span>
                 <span className="text-gray-300">BNCC</span>
               </div>
@@ -124,7 +124,8 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
                 whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={onGetStarted}
-                className="group inline-flex items-center justify-center space-x-3 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 shadow-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500"
+                className="group inline-flex items-center justify-center space-x-3 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 shadow-2xl hover:opacity-90"
+                style={{ backgroundColor: '#044982' }}
               >
                 <span>Começar Agora</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -251,7 +252,7 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.1 }}
-              className="absolute -top-4 -right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white p-4 rounded-xl shadow-lg"
+              className="absolute -top-4 -right-4 bg-gradient-to-r from-blue-500 to-blue-400 text-white p-4 rounded-xl shadow-lg"
             >
               <div className="flex items-center gap-2">
                 <Brain className="w-5 h-5" />
@@ -263,7 +264,7 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2 }}
-              className="absolute -bottom-4 -left-4 bg-gradient-to-r from-green-500 to-blue-500 text-white p-4 rounded-xl shadow-lg"
+              className="absolute -bottom-4 -left-4 bg-gradient-to-r from-emerald-500 to-blue-500 text-white p-4 rounded-xl shadow-lg"
             >
               <div className="flex items-center gap-2">
                 <Award className="w-5 h-5" />
@@ -282,7 +283,7 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl"
+              className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 rounded-2xl blur-xl"
             />
           </motion.div>
         </div>

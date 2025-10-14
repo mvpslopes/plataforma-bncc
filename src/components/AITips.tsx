@@ -88,7 +88,7 @@ export const AITips = ({ isVisible, onClose }: AITipsProps) => {
       >
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-3">
+          <div className="p-3" style={{ backgroundColor: '#044982' }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Lightbulb className="h-4 w-4 text-white" />
@@ -114,7 +114,7 @@ export const AITips = ({ isVisible, onClose }: AITipsProps) => {
                 transition={{ duration: 0.3 }}
               >
                 <div className="mb-2">
-                  <span className="text-xs text-orange-600 font-medium bg-orange-100 px-2 py-1 rounded-full">
+                  <span className="text-xs text-white font-medium px-2 py-1 rounded-full" style={{ backgroundColor: '#044982' }}>
                     {tips[currentTip].category}
                   </span>
                 </div>
@@ -133,7 +133,7 @@ export const AITips = ({ isVisible, onClose }: AITipsProps) => {
                 <div
                   key={index}
                   className={`w-2 h-2 rounded-full transition-colors ${
-                    index === currentTip ? 'bg-orange-500' : 'bg-gray-300'
+                    index === currentTip ? 'bg-blue-600' : 'bg-gray-300'
                   }`}
                 />
               ))}
@@ -142,7 +142,8 @@ export const AITips = ({ isVisible, onClose }: AITipsProps) => {
             {/* Expand button */}
             <button
               onClick={handleExpand}
-              className="w-full mt-3 flex items-center justify-center gap-1 text-xs text-orange-600 hover:text-orange-700 transition-colors"
+              className="w-full mt-3 flex items-center justify-center gap-1 text-xs transition-colors"
+              style={{ color: '#044982' }}
             >
               <span>Ver todas as dicas</span>
               <ChevronRight className={`h-3 w-3 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />

@@ -158,7 +158,7 @@ export const Activities = () => {
           className="mb-8"
         >
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Atividades Nova Edu
+            Atividades BNCC
           </h1>
           <p className="text-gray-600">
             Explore atividades plugadas e desplugadas organizadas por anos escolares

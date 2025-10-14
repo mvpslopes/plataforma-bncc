@@ -73,8 +73,19 @@ export const Login = ({ onBack, onSuccess }: LoginProps) => {
         </button>
 
         <div className="flex items-center justify-center mb-8">
-          <BookOpen className="w-12 h-12 text-sky-600" />
-          <span className="text-3xl font-bold text-gray-900 ml-2">NovaEdu</span>
+          <img 
+            src="/logo/Logo Nova Edu (Oficial)-1.png" 
+            alt="Nova Edu Logo" 
+            className="h-24 w-auto"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              target.nextElementSibling?.classList.remove('hidden');
+            }}
+          />
+          <div className="hidden">
+            <BookOpen className="w-12 h-12 text-sky-600" />
+          </div>
         </div>
 
         <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">

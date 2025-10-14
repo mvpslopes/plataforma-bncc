@@ -106,7 +106,7 @@ export const bnccAxes: BNCCAxis[] = [
     id: 'cultura-digital',
     name: 'Cultura Digital',
     description: 'Uso crítico e responsável das tecnologias digitais',
-    color: 'bg-purple-100 text-purple-700'
+    color: 'bg-blue-100 text-blue-700'
   }
 ];
 

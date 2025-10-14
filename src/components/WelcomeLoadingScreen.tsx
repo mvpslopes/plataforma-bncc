@@ -9,7 +9,7 @@ export const WelcomeLoadingScreen = ({ message = "Preparando sua jornada educaci
   const features = [
     { icon: Brain, text: "Pensamento Computacional", color: "from-blue-500 to-blue-600" },
     { icon: BookOpen, text: "Atividades BNCC", color: "from-green-500 to-green-600" },
-    { icon: Users, text: "Comunidade Ativa", color: "from-purple-500 to-purple-600" },
+    { icon: Users, text: "Comunidade Ativa", color: "from-blue-500 to-blue-600" },
     { icon: Lightbulb, text: "Assistente IA", color: "from-yellow-500 to-yellow-600" }
   ];
 
@@ -20,7 +20,7 @@ export const WelcomeLoadingScreen = ({ message = "Preparando sua jornada educaci
   ];
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-indigo-900 via-blue-900 to-purple-900 z-50 flex items-center justify-center overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden" style={{ backgroundColor: '#044982' }}>
       {/* Background Animation */}
       <div className="absolute inset-0">
         <motion.div
@@ -70,9 +70,10 @@ export const WelcomeLoadingScreen = ({ message = "Preparando sua jornada educaci
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="w-24 h-24 mx-auto bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center shadow-2xl"
-              style={{
-                boxShadow: "0 0 50px rgba(59, 130, 246, 0.5), 0 0 100px rgba(147, 51, 234, 0.3)"
+              className="w-24 h-24 mx-auto rounded-full flex items-center justify-center shadow-2xl"
+              style={{ 
+                backgroundColor: '#044982',
+                boxShadow: "0 0 50px rgba(59, 130, 246, 0.5), 0 0 100px rgba(4, 73, 130, 0.3)"
               }}
             >
               <Brain className="h-12 w-12 text-white" />
@@ -92,9 +93,8 @@ export const WelcomeLoadingScreen = ({ message = "Preparando sua jornada educaci
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 1 }}
-          className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
+          className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white via-blue-100 to-blue-200 bg-clip-text text-transparent"
         >
-          Nova Edu
         </motion.h1>
 
         <motion.p
@@ -131,7 +131,8 @@ export const WelcomeLoadingScreen = ({ message = "Preparando sua jornada educaci
               ease: "easeInOut",
               repeatType: "reverse"
             }}
-            className="h-full bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-full"
+            className="h-full rounded-full"
+            style={{ backgroundColor: '#044982' }}
           />
         </motion.div>
 
@@ -217,7 +218,8 @@ export const WelcomeLoadingScreen = ({ message = "Preparando sua jornada educaci
                 delay: index * 0.2,
                 ease: "easeInOut"
               }}
-              className="w-3 h-3 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full"
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: '#044982' }}
             />
           ))}
         </motion.div>

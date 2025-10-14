@@ -211,7 +211,7 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-t-2xl">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 text-white rounded-t-2xl" style={{ backgroundColor: '#044982' }}>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-white bg-opacity-20 rounded-lg">
                   <Bot className="h-5 w-5" />

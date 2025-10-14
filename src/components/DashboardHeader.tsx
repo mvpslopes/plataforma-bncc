@@ -13,7 +13,7 @@ export const DashboardHeader = () => {
   };
 
   const getRoleColor = (role: string) => {
-    return role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800';
+    return role === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-blue-100 text-blue-800';
   };
 
   const getRoleLabel = (role: string) => {
@@ -25,14 +25,7 @@ export const DashboardHeader = () => {
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <User className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold text-gray-900">Plataforma BNCC</span>
-          </div>
+        <div className="flex justify-end items-center h-16">
 
           {/* User Info */}
           <div className="flex items-center space-x-4">

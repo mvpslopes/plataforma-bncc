@@ -30,8 +30,8 @@ export const Dashboard = ({ onNavigateToUserManagement, onNavigateToReports, use
           <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <Settings className="h-5 w-5 text-purple-600" />
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <Settings className="h-5 w-5" style={{ color: '#044982' }} />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">Painel Administrativo</h3>
@@ -41,7 +41,8 @@ export const Dashboard = ({ onNavigateToUserManagement, onNavigateToReports, use
               <div className="flex gap-3">
                 <button
                   onClick={onNavigateToUserManagement}
-                  className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors"
+                  className="flex items-center gap-2 text-white px-4 py-2 rounded-md transition-colors hover:opacity-90"
+                  style={{ backgroundColor: '#044982' }}
                 >
                   <Users className="h-4 w-4" />
                   Gerenciar Usuários

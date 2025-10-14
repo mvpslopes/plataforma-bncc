@@ -81,9 +81,9 @@ export const Reports = ({ onBackToDashboard }: ReportsProps) => {
       case 'login': return <Users className="h-4 w-4 text-green-600" />;
       case 'logout': return <Users className="h-4 w-4 text-red-600" />;
       case 'view_activity': return <Activity className="h-4 w-4 text-blue-600" />;
-      case 'view_document': return <FileText className="h-4 w-4 text-purple-600" />;
+      case 'view_document': return <FileText className="h-4 w-4" style={{ color: '#044982' }} />;
       case 'view_video': return <Video className="h-4 w-4 text-orange-600" />;
-      case 'download': return <Download className="h-4 w-4 text-indigo-600" />;
+      case 'download': return <Download className="h-4 w-4" style={{ color: '#044982' }} />;
       case 'search': return <Filter className="h-4 w-4 text-pink-600" />;
       default: return <Eye className="h-4 w-4 text-gray-600" />;
     }
@@ -217,7 +217,7 @@ export const Reports = ({ onBackToDashboard }: ReportsProps) => {
                   {analytics.reduce((total, user) => total + user.totalActivities, 0)}
                 </p>
               </div>
-              <Activity className="h-8 w-8 text-purple-600" />
+              <Activity className="h-8 w-8" style={{ color: '#044982' }} />
             </div>
           </motion.div>
 

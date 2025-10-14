@@ -42,7 +42,7 @@ export const FloatingAIAssistant = () => {
       >
         <div className="relative">
           {/* Botão principal */}
-          <div className="w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full shadow-lg flex items-center justify-center text-white hover:shadow-xl transition-all duration-300">
+          <div className="w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-white hover:shadow-xl transition-all duration-300" style={{ backgroundColor: '#044982' }}>
             <MessageCircle className="h-6 w-6" />
           </div>
           
@@ -70,7 +70,7 @@ export const FloatingAIAssistant = () => {
           >
             <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
               {/* Header minimizado */}
-              <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+              <div className="flex items-center justify-between p-3 text-white" style={{ backgroundColor: '#044982' }}>
                 <div className="flex items-center gap-2">
                   <Bot className="h-4 w-4" />
                   <span className="text-sm font-medium">Assistente BNCC</span>

@@ -27,33 +27,33 @@ const features = [
     title: 'Mundo Digital',
     description:
       'Explore conceitos de mundo digital e programação de forma prática e alinhada com a BNCC.',
-    gradient: 'from-purple-500 to-purple-600',
-    bgGradient: 'from-purple-50 to-purple-100',
+    gradient: 'from-blue-500 to-blue-600',
+    bgGradient: 'from-blue-50 to-blue-100',
     stats: 'IA Assistente',
-    color: 'text-purple-600'
+    color: 'text-blue-600'
   },
 ];
 
 const benefits = [
   { icon: Code, text: 'Atividades Prontas', color: 'text-blue-500' },
   { icon: Users, text: 'Comunidade Ativa', color: 'text-green-500' },
-  { icon: BookOpen, text: 'Material BNCC', color: 'text-purple-500' },
+  { icon: BookOpen, text: 'Material BNCC', color: 'text-blue-500' },
   { icon: Zap, text: 'Implementação Rápida', color: 'text-yellow-500' },
   { icon: Target, text: 'Resultados Comprovados', color: 'text-red-500' },
-  { icon: Lightbulb, text: 'Inovação Constante', color: 'text-indigo-500' }
+  { icon: Lightbulb, text: 'Inovação Constante', color: 'text-blue-500' }
 ];
 
 export const Features = () => {
   return (
-    <section id="cursos" className="py-24 px-4 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
+    <section id="cursos" className="py-24 px-4 bg-gradient-to-br from-white to-gray-50 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <motion.div
           animate={{
             background: [
-              "radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)",
-              "radial-gradient(circle at 90% 80%, rgba(147, 51, 234, 0.1) 0%, transparent 50%)",
-              "radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)"
+              "radial-gradient(circle at 10% 20%, rgba(156, 163, 175, 0.05) 0%, transparent 50%)",
+              "radial-gradient(circle at 90% 80%, rgba(107, 114, 128, 0.05) 0%, transparent 50%)",
+              "radial-gradient(circle at 10% 20%, rgba(156, 163, 175, 0.05) 0%, transparent 50%)"
             ]
           }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
@@ -79,7 +79,7 @@ export const Features = () => {
           </motion.div>
 
           <h2 className="text-5xl md:text-6xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">
               Transforme sua
             </span>
             <br />

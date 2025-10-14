@@ -22,14 +22,20 @@ export const Header = ({ onLoginClick }: HeaderProps) => {
             className="flex items-center space-x-3"
             whileHover={{ scale: 1.05 }}
           >
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-              <Brain className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Nova
-              </span>
-              <span className="text-2xl font-bold text-gray-900 ml-1">Edu</span>
+            <img 
+              src="/logo/Logo Nova Edu (Oficial)-7.png" 
+              alt="Nova Edu Logo" 
+              className="h-12 w-auto"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                target.nextElementSibling?.classList.remove('hidden');
+              }}
+            />
+            <div className="hidden">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#044982' }}>
+                <Brain className="w-6 h-6 text-white" />
+              </div>
             </div>
           </motion.div>
 
@@ -51,7 +57,7 @@ export const Header = ({ onLoginClick }: HeaderProps) => {
                 transition={{ delay: index * 0.1 }}
               >
                 {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-blue-400 group-hover:w-full transition-all duration-300"></span>
               </motion.a>
             ))}
           </nav>
@@ -59,7 +65,8 @@ export const Header = ({ onLoginClick }: HeaderProps) => {
           {/* CTA Button */}
           <motion.button
             onClick={onLoginClick}
-            className="hidden md:flex items-center space-x-2 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 shadow-lg hover:shadow-xl"
+            className="hidden md:flex items-center space-x-2 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:opacity-90"
+            style={{ backgroundColor: '#044982' }}
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0, x: 20 }}
@@ -108,7 +115,8 @@ export const Header = ({ onLoginClick }: HeaderProps) => {
             ))}
             <button
               onClick={onLoginClick}
-              className="w-full flex items-center justify-center space-x-2 text-white px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 transition-all duration-300"
+              className="w-full flex items-center justify-center space-x-2 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:opacity-90"
+              style={{ backgroundColor: '#044982' }}
             >
               <LogIn className="w-4 h-4" />
               <span>Entrar</span>

@@ -25,9 +25,20 @@ export const Sidebar = ({ currentPage, onNavigate }: SidebarProps) => {
       className="w-64 bg-white border-r border-gray-200 min-h-screen fixed left-0 top-16"
     >
       <div className="p-6">
-        <div className="flex items-center space-x-2 mb-8">
-          <BookOpen className="w-8 h-8" style={{ color: '#005a93' }} />
-          <span className="text-2xl font-bold text-gray-900">NovaEdu</span>
+        <div className="flex justify-center mb-8">
+          <img 
+            src="/logo/Logo Nova Edu (Oficial)-1.png" 
+            alt="Nova Edu Logo" 
+            className="h-28 w-auto"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              target.nextElementSibling?.classList.remove('hidden');
+            }}
+          />
+          <div className="hidden">
+            <BookOpen className="w-8 h-8" style={{ color: '#005a93' }} />
+          </div>
         </div>
 
         <div className="mb-8 p-4 rounded-lg" style={{ backgroundColor: '#e6f2ff' }}>
