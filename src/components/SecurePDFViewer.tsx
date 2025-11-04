@@ -1,5 +1,8 @@
-import { useState } from 'react';
-import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCw, Download, Eye } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist';
+// @ts-ignore - treated as url by Vite
+import workerSrc from 'pdfjs-dist/build/pdf.worker.mjs?url';
+import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCw, Download, Eye, Maximize2, Minimize2 } from 'lucide-react';
 
 interface SecurePDFViewerProps {
   pdfUrl: string;
@@ -13,6 +16,35 @@ export const SecurePDFViewer = ({ pdfUrl, title, onClose, allowDownload = false 
   const [totalPages, setTotalPages] = useState(1);
   const [zoom, setZoom] = useState(100);
   const [rotation, setRotation] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const detectTotalPages = async () => {
+      try {
+        GlobalWorkerOptions.workerSrc = workerSrc as unknown as string;
+        let loadingTask;
+        try {
+          loadingTask = getDocument({ url: pdfUrl });
+          const pdf = await loadingTask.promise;
+          if (isMounted) setTotalPages(pdf.numPages || 1);
+          return;
+        } catch (_e) {
+          // fallback para ArrayBuffer
+        }
+        const response = await fetch(pdfUrl, { cache: 'no-store', credentials: 'same-origin' });
+        const arrayBuffer = await response.arrayBuffer();
+        loadingTask = getDocument({ data: arrayBuffer });
+        const pdf = await loadingTask.promise;
+        if (isMounted) setTotalPages(pdf.numPages || 1);
+      } catch {
+        if (isMounted) setTotalPages(1);
+      }
+    };
+    detectTotalPages();
+    return () => { isMounted = false; };
+  }, [pdfUrl]);
 
   const handleZoomIn = () => {
     setZoom(prev => Math.min(prev + 25, 200));
@@ -46,9 +78,21 @@ export const SecurePDFViewer = ({ pdfUrl, title, onClose, allowDownload = false 
     }
   };
 
+  const toggleFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement && containerRef.current) {
+        await containerRef.current.requestFullscreen();
+        setIsFullscreen(true);
+      } else if (document.fullscreenElement) {
+        await document.exitFullscreen();
+        setIsFullscreen(false);
+      }
+    } catch {}
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-2xl w-full max-w-6xl h-full max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 bg-black bg-opacity-75 z-50">
+      <div ref={containerRef} className="bg-white w-screen h-screen flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center gap-3">
@@ -102,6 +146,12 @@ export const SecurePDFViewer = ({ pdfUrl, title, onClose, allowDownload = false 
               <ZoomIn className="h-4 w-4" />
             </button>
             <button
+              onClick={toggleFullscreen}
+              className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+            >
+              {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+            </button>
+            <button
               onClick={handleRotate}
               className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
             >
@@ -137,9 +187,7 @@ export const SecurePDFViewer = ({ pdfUrl, title, onClose, allowDownload = false 
               type="application/pdf"
               className="w-full h-full"
               title={title}
-              onLoad={() => {
-                setTotalPages(10); // Valor fictício
-              }}
+              onLoad={() => { /* total de páginas é definido via PDF.js acima */ }}
             />
           </div>
           

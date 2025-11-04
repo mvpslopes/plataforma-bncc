@@ -369,7 +369,7 @@ export const activities: Activity[] = [
       'Estimular criatividade e imaginação',
       'Trabalhar sequências de desenho'
     ],
-    thumbnail_url: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=225&fit=crop&crop=center',
+    thumbnail_url: '/images/videos/desenhando_personagem.jpg',
     video_url: 'https://vimeo.com/1129701560', // Desenhando um Personagem
     document_url: '/pdf/educacao-infantil/desenhando-personagem.pdf',
     created_at: new Date().toISOString()
@@ -393,7 +393,7 @@ export const activities: Activity[] = [
       'Trabalhar com sequências e padrões',
       'Melhorar coordenação motora'
     ],
-    thumbnail_url: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=225&fit=crop&crop=center',
+    thumbnail_url: '/images/videos/colorindo_codigos.jpeg',
     video_url: 'https://vimeo.com/1129701080', // Colorindo por Códigos
     document_url: '/pdf/anos-iniciais/colorindo-codigos.pdf',
     created_at: new Date().toISOString()
@@ -417,7 +417,7 @@ export const activities: Activity[] = [
       'Trabalhar coordenação motora',
       'Estimular raciocínio lógico'
     ],
-    thumbnail_url: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=400&h=225&fit=crop&crop=center',
+    thumbnail_url: '/images/videos/jogo-velha-sensorial.png',
     video_url: 'https://vimeo.com/1129699944', // Jogo da Velha Sensorial
     created_at: new Date().toISOString()
   },
@@ -440,7 +440,7 @@ export const activities: Activity[] = [
       'Trabalhar com dados geográficos',
       'Aplicar pensamento computacional na prática'
     ],
-    thumbnail_url: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=225&fit=crop&crop=center',
+    thumbnail_url: '/images/videos/mapeando-vizinhanca.jpeg',
     video_url: 'https://vimeo.com/1129700562', // Mapeando a Vizinhança
     document_url: '/pdf/anos-finais/mapeando-vizinhanca.pdf',
     created_at: new Date().toISOString()
