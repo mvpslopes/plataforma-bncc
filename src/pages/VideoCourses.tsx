@@ -130,6 +130,17 @@ export const VideoCourses = () => {
                       className="w-full h-32 object-cover"
                       loading="lazy"
                     />
+                    {/* Anos escolares sobre a miniatura */}
+                    <div className="absolute bottom-2 left-2 right-2 flex gap-1 flex-wrap">
+                      {video.schoolYears.map((yearId) => (
+                        <span
+                          key={yearId}
+                          className="bg-white/90 text-gray-800 border border-gray-200 px-1.5 py-0.5 rounded text-[10px] font-medium shadow-sm"
+                        >
+                          {getYearName(yearId)}
+                        </span>
+                      ))}
+                    </div>
                     <div className="absolute top-2 left-2">
                       <span className="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium">
                         Real
@@ -191,6 +202,17 @@ export const VideoCourses = () => {
                     target.src = `https://via.placeholder.com/400x225/4F46E5/FFFFFF?text=${encodeURIComponent(video.title)}`;
                   }}
                 />
+                {/* Anos escolares sobre a miniatura */}
+                <div className="absolute bottom-3 left-3 right-3 flex gap-1 flex-wrap">
+                  {video.schoolYears.map((yearId) => (
+                    <span
+                      key={yearId}
+                      className="bg-white/90 text-gray-800 border border-gray-200 px-2 py-0.5 rounded text-[11px] font-medium shadow-sm"
+                    >
+                      {getYearName(yearId)}
+                    </span>
+                  ))}
+                </div>
                 <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
                   <div className="opacity-0 hover:opacity-100 transition-opacity duration-300">
                     <Play className="w-12 h-12 text-white" />

@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/LocalAuthContext';
 import { Activity, SchoolYear, BNCCAxis } from '../types/bncc';
 import { SecurePDFViewer } from '../components/SecurePDFViewer';
 import { activityLogger } from '../services/ActivityLogger';
+import { ActivityDuration } from '../components/ActivityDuration';
 
 const typeIcons = {
   plugada: Monitor,
@@ -305,6 +306,17 @@ export const Activities = () => {
                         className="w-full h-32 object-cover"
                         loading="lazy"
                       />
+                      {/* Anos escolares sobre a miniatura */}
+                      <div className="absolute bottom-2 left-2 right-2 flex gap-1 flex-wrap">
+                        {activity.schoolYears.map((yearId) => (
+                          <span
+                            key={yearId}
+                            className="bg-white/90 text-gray-800 border border-gray-200 px-1.5 py-0.5 rounded text-[10px] font-medium shadow-sm"
+                          >
+                            {getYearName(yearId)}
+                          </span>
+                        ))}
+                      </div>
                       <div className="absolute top-2 left-2">
                         <span className="bg-purple-600 text-white px-2 py-1 rounded text-xs font-medium">
                           Real
@@ -324,9 +336,11 @@ export const Activities = () => {
                         {activity.description}
                       </p>
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs text-gray-500">
-                          {Math.floor(activity.duration / 60)} min
-                        </span>
+                        <ActivityDuration
+                          videoUrl={activity.video_url}
+                          fallbackMinutes={activity.duration}
+                          className="text-xs text-gray-500"
+                        />
                         <span className={`px-2 py-1 rounded text-xs font-medium ${difficultyColors[activity.difficulty]}`}>
                           {difficultyLabels[activity.difficulty]}
                         </span>
@@ -391,6 +405,17 @@ export const Activities = () => {
                       target.src = `https://via.placeholder.com/400x225/4F46E5/FFFFFF?text=${encodeURIComponent(activity.title)}`;
                     }}
                   />
+                  {/* Anos escolares sobre a miniatura */}
+                  <div className="absolute bottom-3 left-3 right-3 flex gap-1 flex-wrap">
+                    {activity.schoolYears.map((yearId) => (
+                      <span
+                        key={yearId}
+                        className="bg-white/90 text-gray-800 border border-gray-200 px-2 py-0.5 rounded text-[11px] font-medium shadow-sm"
+                      >
+                        {getYearName(yearId)}
+                      </span>
+                    ))}
+                  </div>
                   <div className="absolute top-3 left-3">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${typeColors[activity.type]}`}>
                       {typeLabels[activity.type]}
@@ -439,9 +464,11 @@ export const Activities = () => {
 
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-gray-700">Duração:</span>
-                      <span className="text-sm text-gray-600">
-                        {Math.floor(activity.duration / 60)} min
-                      </span>
+                      <ActivityDuration
+                        videoUrl={activity.video_url}
+                        fallbackMinutes={activity.duration}
+                        className="text-sm text-gray-600"
+                      />
                     </div>
                   </div>
 
