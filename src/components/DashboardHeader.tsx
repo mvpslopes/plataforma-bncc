@@ -9,15 +9,21 @@ export const DashboardHeader = () => {
   };
 
   const getRoleIcon = (role: string) => {
-    return role === 'admin' ? <Shield className="h-4 w-4" /> : <GraduationCap className="h-4 w-4" />;
+    if (role === 'admin') return <Shield className="h-4 w-4" />;
+    if (role === 'professor') return <GraduationCap className="h-4 w-4" />;
+    return <User className="h-4 w-4" />; // aluno
   };
 
   const getRoleColor = (role: string) => {
-    return role === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-blue-100 text-blue-800';
+    if (role === 'admin') return 'bg-blue-100 text-blue-800';
+    if (role === 'professor') return 'bg-blue-100 text-blue-800';
+    return 'bg-purple-100 text-purple-800'; // aluno
   };
 
   const getRoleLabel = (role: string) => {
-    return role === 'admin' ? 'Administrador' : 'Professor';
+    if (role === 'admin') return 'Administrador';
+    if (role === 'professor') return 'Professor';
+    return 'Aluno';
   };
 
   if (!user) return null;

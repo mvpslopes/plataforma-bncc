@@ -132,7 +132,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       bio: `Professor de ${user.subjects?.join(', ') || 'Educação'}`,
       updated_at: user.created_at
     }));
-    localStorage.setItem('plataforma-bncc-users', JSON.stringify(usersWithPasswords));
+    // Adicionar usuário aluno fictício, se não existir
+    const demoStudentEmail = 'aluno.teste@plataformabncc.local';
+    const demoStudentId = 'aluno-demo-001';
+    const existing = usersWithPasswords.find(u => u.email === demoStudentEmail);
+    const finalUsers = existing
+      ? usersWithPasswords
+      : [
+          ...usersWithPasswords,
+          {
+            id: demoStudentId,
+            name: 'Aluno Teste',
+            email: demoStudentEmail,
+            password: 'Aluno123!',
+            role: 'aluno',
+            school: 'Escola Demo',
+            subjects: [],
+            created_at: new Date().toISOString(),
+            last_login: null,
+            is_active: true,
+            bio: 'Estudante de demonstração',
+            updated_at: new Date().toISOString(),
+          },
+        ];
+
+    localStorage.setItem('plataforma-bncc-users', JSON.stringify(finalUsers));
 
     // Verificar se há usuário logado no localStorage
     const savedUser = localStorage.getItem('plataforma-bncc-user');

@@ -7,6 +7,7 @@ import { Dashboard } from './pages/Dashboard';
 import UserManagement from './pages/UserManagement';
 import { Reports } from './pages/Reports';
 import { LoadingScreen } from './components/LoadingScreen';
+import StudentHome from './pages/StudentHome';
 import { WelcomeLoadingScreen } from './components/WelcomeLoadingScreen';
 
 function AppContent() {
@@ -39,6 +40,9 @@ function AppContent() {
 
   if (user) {
     // Renderizar página baseada no role e página atual
+    if (user.role === 'aluno') {
+      return <StudentHome />;
+    }
     if (user.role === 'admin' && currentPage === 'user-management') {
       return (
         <UserManagement 
