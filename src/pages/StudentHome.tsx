@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useAuth } from '../contexts/LocalAuthContext';
 import { DashboardHeader } from '../components/DashboardHeader';
 import { SequencingGame } from '../games/SequencingGame';
@@ -34,10 +34,23 @@ interface GameInfo {
 export default function StudentHome(_props: StudentHomeProps) {
   const { user, signOut } = useAuth();
   const [currentPage, setCurrentPage] = useState<'games' | 'progress' | 'profile'>('games');
-  const [currentGame, setCurrentGame] = useState<string>('sequencing');
+  const [currentGame, setCurrentGame] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<GameCategory>('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState<GameDifficulty>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const gameDisplayRef = useRef<HTMLDivElement>(null);
+
+  // Scroll automático quando um jogo é selecionado
+  useEffect(() => {
+    if (currentGame && gameDisplayRef.current) {
+      setTimeout(() => {
+        gameDisplayRef.current?.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }, 100);
+    }
+  }, [currentGame]);
 
   if (!user) return null;
 
@@ -427,7 +440,26 @@ export default function StudentHome(_props: StudentHomeProps) {
 
               {/* Game Display */}
               {currentGame && (
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+                <div 
+                  ref={gameDisplayRef}
+                  className="bg-white rounded-lg shadow-sm border-2 border-purple-200 p-6 mb-6 mt-6"
+                >
+                  <div className="mb-4 pb-4 border-b border-gray-200">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        {games.find(g => g.id === currentGame)?.name}
+                      </h2>
+                      <button
+                        onClick={() => setCurrentGame('')}
+                        className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                      >
+                        ✕ Fechar
+                      </button>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {games.find(g => g.id === currentGame)?.description}
+                    </p>
+                  </div>
                   {currentGame === 'sequencing' && <SequencingGame userId={user.id} />}
                   {currentGame === 'pattern' && <PatternGame userId={user.id} />}
                   {currentGame === 'debugging' && <DebuggingGame userId={user.id} />}
