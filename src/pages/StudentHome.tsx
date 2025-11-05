@@ -7,6 +7,9 @@ import { DebuggingGame } from '../games/DebuggingGame';
 import { DecompositionGame } from '../games/DecompositionGame';
 import { ConditionalGame } from '../games/ConditionalGame';
 import { LoopGame } from '../games/LoopGame';
+import { BattleshipGame } from '../games/BattleshipGame';
+import { TicTacToeGame } from '../games/TicTacToeGame';
+import { GeniusGame } from '../games/GeniusGame';
 import { LogOut, User, Gamepad2, Trophy, BookOpen } from 'lucide-react';
 
 interface StudentHomeProps {}
@@ -14,7 +17,7 @@ interface StudentHomeProps {}
 export default function StudentHome(_props: StudentHomeProps) {
   const { user, signOut } = useAuth();
   const [currentPage, setCurrentPage] = useState<'games' | 'progress' | 'profile'>('games');
-  const [currentGame, setCurrentGame] = useState<'sequencing' | 'pattern' | 'debugging' | 'decomposition' | 'conditional' | 'loop'>('sequencing');
+  const [currentGame, setCurrentGame] = useState<'sequencing' | 'pattern' | 'debugging' | 'decomposition' | 'conditional' | 'loop' | 'battleship' | 'tictactoe' | 'genius'>('sequencing');
 
   if (!user) return null;
 
@@ -179,6 +182,45 @@ export default function StudentHome(_props: StudentHomeProps) {
                   </div>
                   <p className="text-sm text-gray-600">Repetir ações eficientemente</p>
                 </button>
+
+                <button
+                  onClick={() => setCurrentGame('battleship')}
+                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'battleship' ? 'ring-2 ring-purple-500' : ''}`}
+                >
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">Batalha Naval</h3>
+                  </div>
+                  <p className="text-sm text-gray-600">Encontre os navios escondidos</p>
+                </button>
+
+                <button
+                  onClick={() => setCurrentGame('tictactoe')}
+                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'tictactoe' ? 'ring-2 ring-purple-500' : ''}`}
+                >
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">Jogo da Velha</h3>
+                  </div>
+                  <p className="text-sm text-gray-600">Estratégia e lógica</p>
+                </button>
+
+                <button
+                  onClick={() => setCurrentGame('genius')}
+                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'genius' ? 'ring-2 ring-purple-500' : ''}`}
+                >
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">Genius</h3>
+                  </div>
+                  <p className="text-sm text-gray-600">Memorize a sequência</p>
+                </button>
               </div>
 
               {/* Game Display */}
@@ -189,6 +231,9 @@ export default function StudentHome(_props: StudentHomeProps) {
                 {currentGame === 'decomposition' && <DecompositionGame userId={user.id} />}
                 {currentGame === 'conditional' && <ConditionalGame userId={user.id} />}
                 {currentGame === 'loop' && <LoopGame userId={user.id} />}
+                {currentGame === 'battleship' && <BattleshipGame userId={user.id} />}
+                {currentGame === 'tictactoe' && <TicTacToeGame userId={user.id} />}
+                {currentGame === 'genius' && <GeniusGame userId={user.id} />}
               </div>
             </div>
           )}
