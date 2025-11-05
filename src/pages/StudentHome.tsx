@@ -4,6 +4,9 @@ import { DashboardHeader } from '../components/DashboardHeader';
 import { SequencingGame } from '../games/SequencingGame';
 import { PatternGame } from '../games/PatternGame';
 import { DebuggingGame } from '../games/DebuggingGame';
+import { DecompositionGame } from '../games/DecompositionGame';
+import { ConditionalGame } from '../games/ConditionalGame';
+import { LoopGame } from '../games/LoopGame';
 import { LogOut, User, Gamepad2, Trophy, BookOpen } from 'lucide-react';
 
 interface StudentHomeProps {}
@@ -11,7 +14,7 @@ interface StudentHomeProps {}
 export default function StudentHome(_props: StudentHomeProps) {
   const { user, signOut } = useAuth();
   const [currentPage, setCurrentPage] = useState<'games' | 'progress' | 'profile'>('games');
-  const [currentGame, setCurrentGame] = useState<'sequencing' | 'pattern' | 'debugging'>('sequencing');
+  const [currentGame, setCurrentGame] = useState<'sequencing' | 'pattern' | 'debugging' | 'decomposition' | 'conditional' | 'loop'>('sequencing');
 
   if (!user) return null;
 
@@ -98,7 +101,7 @@ export default function StudentHome(_props: StudentHomeProps) {
 
               {/* Game Card */}
               {/* Selector */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                 <button
                   onClick={() => setCurrentGame('sequencing')}
                   className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'sequencing' ? 'ring-2 ring-purple-500' : ''}`}
@@ -137,6 +140,45 @@ export default function StudentHome(_props: StudentHomeProps) {
                   </div>
                   <p className="text-sm text-gray-600">Encontre o passo incorreto</p>
                 </button>
+
+                <button
+                  onClick={() => setCurrentGame('decomposition')}
+                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'decomposition' ? 'ring-2 ring-purple-500' : ''}`}
+                >
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">Decomposição</h3>
+                  </div>
+                  <p className="text-sm text-gray-600">Quebre problemas em partes</p>
+                </button>
+
+                <button
+                  onClick={() => setCurrentGame('conditional')}
+                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'conditional' ? 'ring-2 ring-purple-500' : ''}`}
+                >
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">Lógica Condicional</h3>
+                  </div>
+                  <p className="text-sm text-gray-600">Se/Então - Tomar decisões</p>
+                </button>
+
+                <button
+                  onClick={() => setCurrentGame('loop')}
+                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'loop' ? 'ring-2 ring-purple-500' : ''}`}
+                >
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">Loops</h3>
+                  </div>
+                  <p className="text-sm text-gray-600">Repetir ações eficientemente</p>
+                </button>
               </div>
 
               {/* Game Display */}
@@ -144,6 +186,9 @@ export default function StudentHome(_props: StudentHomeProps) {
                 {currentGame === 'sequencing' && <SequencingGame userId={user.id} />}
                 {currentGame === 'pattern' && <PatternGame userId={user.id} />}
                 {currentGame === 'debugging' && <DebuggingGame userId={user.id} />}
+                {currentGame === 'decomposition' && <DecompositionGame userId={user.id} />}
+                {currentGame === 'conditional' && <ConditionalGame userId={user.id} />}
+                {currentGame === 'loop' && <LoopGame userId={user.id} />}
               </div>
             </div>
           )}
