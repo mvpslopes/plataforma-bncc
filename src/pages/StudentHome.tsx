@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '../contexts/LocalAuthContext';
 import { DashboardHeader } from '../components/DashboardHeader';
 import { SequencingGame } from '../games/SequencingGame';
+import { PatternGame } from '../games/PatternGame';
+import { DebuggingGame } from '../games/DebuggingGame';
 import { LogOut, User, Gamepad2, Trophy, BookOpen } from 'lucide-react';
 
 interface StudentHomeProps {}
@@ -9,6 +11,7 @@ interface StudentHomeProps {}
 export default function StudentHome(_props: StudentHomeProps) {
   const { user, signOut } = useAuth();
   const [currentPage, setCurrentPage] = useState<'games' | 'progress' | 'profile'>('games');
+  const [currentGame, setCurrentGame] = useState<'sequencing' | 'pattern' | 'debugging'>('sequencing');
 
   if (!user) return null;
 
@@ -94,17 +97,53 @@ export default function StudentHome(_props: StudentHomeProps) {
               </div>
 
               {/* Game Card */}
+              {/* Selector */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <button
+                  onClick={() => setCurrentGame('sequencing')}
+                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'sequencing' ? 'ring-2 ring-purple-500' : ''}`}
+                >
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">Sequenciamento</h3>
+                  </div>
+                  <p className="text-sm text-gray-600">Ordene passos de um algoritmo</p>
+                </button>
+
+                <button
+                  onClick={() => setCurrentGame('pattern')}
+                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'pattern' ? 'ring-2 ring-purple-500' : ''}`}
+                >
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">Padrões</h3>
+                  </div>
+                  <p className="text-sm text-gray-600">Complete a sequência correta</p>
+                </button>
+
+                <button
+                  onClick={() => setCurrentGame('debugging')}
+                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'debugging' ? 'ring-2 ring-purple-500' : ''}`}
+                >
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">Depuração</h3>
+                  </div>
+                  <p className="text-sm text-gray-600">Encontre o passo incorreto</p>
+                </button>
+              </div>
+
+              {/* Game Display */}
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-3 bg-purple-100 rounded-lg">
-                    <Gamepad2 className="h-6 w-6" style={{ color: '#7c3aed' }} />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-semibold text-gray-900">Jogo de Sequenciamento</h2>
-                    <p className="text-sm text-gray-600">Desenvolva habilidades de pensamento computacional</p>
-                  </div>
-                </div>
-                <SequencingGame userId={user.id} />
+                {currentGame === 'sequencing' && <SequencingGame userId={user.id} />}
+                {currentGame === 'pattern' && <PatternGame userId={user.id} />}
+                {currentGame === 'debugging' && <DebuggingGame userId={user.id} />}
               </div>
             </div>
           )}
