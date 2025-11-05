@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '../contexts/LocalAuthContext';
 import { DashboardHeader } from '../components/DashboardHeader';
 import { SequencingGame } from '../games/SequencingGame';
@@ -10,23 +10,204 @@ import { LoopGame } from '../games/LoopGame';
 import { BattleshipGame } from '../games/BattleshipGame';
 import { TicTacToeGame } from '../games/TicTacToeGame';
 import { GeniusGame } from '../games/GeniusGame';
-import { LogOut, User, Gamepad2, Trophy, BookOpen } from 'lucide-react';
+import { MazeGame } from '../games/MazeGame';
+import { GeoboardGame } from '../games/GeoboardGame';
+import { SecurityQuizGame } from '../games/SecurityQuizGame';
+import { SudokuGame } from '../games/SudokuGame';
+import { LogOut, User, Gamepad2, Trophy, Filter, Brain, Globe, Shield } from 'lucide-react';
 
 interface StudentHomeProps {}
+
+type GameCategory = 'all' | 'pensamento-computacional' | 'mundo-digital' | 'cultura-digital';
+type GameDifficulty = 'all' | 'facil' | 'medio' | 'dificil';
+
+interface GameInfo {
+  id: string;
+  name: string;
+  description: string;
+  category: 'pensamento-computacional' | 'mundo-digital' | 'cultura-digital';
+  difficulty: 'facil' | 'medio' | 'dificil';
+  bnccSkill: string;
+  icon: React.ReactNode;
+}
 
 export default function StudentHome(_props: StudentHomeProps) {
   const { user, signOut } = useAuth();
   const [currentPage, setCurrentPage] = useState<'games' | 'progress' | 'profile'>('games');
-  const [currentGame, setCurrentGame] = useState<'sequencing' | 'pattern' | 'debugging' | 'decomposition' | 'conditional' | 'loop' | 'battleship' | 'tictactoe' | 'genius'>('sequencing');
+  const [currentGame, setCurrentGame] = useState<string>('sequencing');
+  const [selectedCategory, setSelectedCategory] = useState<GameCategory>('all');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<GameDifficulty>('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   if (!user) return null;
 
-  const getRoleIcon = (role: string) => {
-    return <User className="h-4 w-4" />;
+  const games: GameInfo[] = [
+    // Pensamento Computacional
+    {
+      id: 'sequencing',
+      name: 'Sequenciamento',
+      description: 'Ordene passos de um algoritmo',
+      category: 'pensamento-computacional',
+      difficulty: 'facil',
+      bnccSkill: 'EF02CI01',
+      icon: <Gamepad2 className="h-5 w-5" />,
+    },
+    {
+      id: 'pattern',
+      name: 'Padrões',
+      description: 'Complete a sequência correta',
+      category: 'pensamento-computacional',
+      difficulty: 'facil',
+      bnccSkill: 'EF01CI01',
+      icon: <Gamepad2 className="h-5 w-5" />,
+    },
+    {
+      id: 'debugging',
+      name: 'Depuração',
+      description: 'Encontre o passo incorreto',
+      category: 'pensamento-computacional',
+      difficulty: 'medio',
+      bnccSkill: 'EF05CI01',
+      icon: <Gamepad2 className="h-5 w-5" />,
+    },
+    {
+      id: 'decomposition',
+      name: 'Decomposição',
+      description: 'Quebre problemas em partes',
+      category: 'pensamento-computacional',
+      difficulty: 'medio',
+      bnccSkill: 'EF03CI01',
+      icon: <Gamepad2 className="h-5 w-5" />,
+    },
+    {
+      id: 'conditional',
+      name: 'Lógica Condicional',
+      description: 'Se/Então - Tomar decisões',
+      category: 'pensamento-computacional',
+      difficulty: 'medio',
+      bnccSkill: 'EF05CI01',
+      icon: <Gamepad2 className="h-5 w-5" />,
+    },
+    {
+      id: 'loop',
+      name: 'Loops',
+      description: 'Repetir ações eficientemente',
+      category: 'pensamento-computacional',
+      difficulty: 'medio',
+      bnccSkill: 'EF05CI01',
+      icon: <Gamepad2 className="h-5 w-5" />,
+    },
+    {
+      id: 'maze',
+      name: 'Labirinto Algorítmico',
+      description: 'Crie sequências de comandos',
+      category: 'pensamento-computacional',
+      difficulty: 'medio',
+      bnccSkill: 'EF02CI01',
+      icon: <Gamepad2 className="h-5 w-5" />,
+    },
+    {
+      id: 'geoboard',
+      name: 'Geoboard Digital',
+      description: 'Padrões geométricos e visuais',
+      category: 'pensamento-computacional',
+      difficulty: 'facil',
+      bnccSkill: 'EF01CI01',
+      icon: <Gamepad2 className="h-5 w-5" />,
+    },
+    {
+      id: 'sudoku',
+      name: 'Sudoku para Crianças',
+      description: 'Lógica numérica e padrões',
+      category: 'pensamento-computacional',
+      difficulty: 'medio',
+      bnccSkill: 'EF04CI01',
+      icon: <Gamepad2 className="h-5 w-5" />,
+    },
+    // Mundo Digital
+    {
+      id: 'battleship',
+      name: 'Batalha Naval',
+      description: 'Estratégia e coordenadas',
+      category: 'mundo-digital',
+      difficulty: 'facil',
+      bnccSkill: 'Mundo Digital',
+      icon: <Gamepad2 className="h-5 w-5" />,
+    },
+    {
+      id: 'tictactoe',
+      name: 'Jogo da Velha',
+      description: 'Estratégia e lógica',
+      category: 'mundo-digital',
+      difficulty: 'facil',
+      bnccSkill: 'Mundo Digital',
+      icon: <Gamepad2 className="h-5 w-5" />,
+    },
+    {
+      id: 'genius',
+      name: 'Genius',
+      description: 'Memória e sequenciamento',
+      category: 'mundo-digital',
+      difficulty: 'facil',
+      bnccSkill: 'Mundo Digital',
+      icon: <Gamepad2 className="h-5 w-5" />,
+    },
+    // Cultura Digital
+    {
+      id: 'security-quiz',
+      name: 'Quiz de Segurança',
+      description: 'Teste conhecimentos sobre segurança',
+      category: 'cultura-digital',
+      difficulty: 'medio',
+      bnccSkill: 'EF08CI01',
+      icon: <Gamepad2 className="h-5 w-5" />,
+    },
+  ];
+
+  const filteredGames = useMemo(() => {
+    return games.filter(game => {
+      const matchesCategory = selectedCategory === 'all' || game.category === selectedCategory;
+      const matchesDifficulty = selectedDifficulty === 'all' || game.difficulty === selectedDifficulty;
+      const matchesSearch = searchTerm === '' || 
+        game.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        game.description.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesCategory && matchesDifficulty && matchesSearch;
+    });
+  }, [selectedCategory, selectedDifficulty, searchTerm]);
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'pensamento-computacional':
+        return <Brain className="h-4 w-4" />;
+      case 'mundo-digital':
+        return <Globe className="h-4 w-4" />;
+      case 'cultura-digital':
+        return <Shield className="h-4 w-4" />;
+      default:
+        return <Gamepad2 className="h-4 w-4" />;
+    }
   };
 
-  const getRoleLabel = (role: string) => {
-    return 'Aluno';
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'pensamento-computacional':
+        return 'bg-blue-100 text-blue-700';
+      case 'mundo-digital':
+        return 'bg-green-100 text-green-700';
+      case 'cultura-digital':
+        return 'bg-purple-100 text-purple-700';
+      default:
+        return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  const getDifficultyBadge = (difficulty: string) => {
+    const badges = {
+      facil: 'bg-green-100 text-green-700',
+      medio: 'bg-yellow-100 text-yellow-700',
+      dificil: 'bg-red-100 text-red-700',
+    };
+    return badges[difficulty as keyof typeof badges] || 'bg-gray-100 text-gray-700';
   };
 
   return (
@@ -102,139 +283,166 @@ export default function StudentHome(_props: StudentHomeProps) {
                 <p className="text-gray-600">Aprenda pensamento computacional de forma divertida!</p>
               </div>
 
-              {/* Game Card */}
-              {/* Selector */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                <button
-                  onClick={() => setCurrentGame('sequencing')}
-                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'sequencing' ? 'ring-2 ring-purple-500' : ''}`}
-                >
-                  <div className="flex items-center gap-3 mb-1">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900">Sequenciamento</h3>
+              {/* Filtros e Busca */}
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+                <div className="flex flex-col md:flex-row gap-4">
+                  {/* Busca */}
+                  <div className="flex-1">
+                    <input
+                      type="text"
+                      placeholder="Buscar jogos..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
                   </div>
-                  <p className="text-sm text-gray-600">Ordene passos de um algoritmo</p>
-                </button>
 
-                <button
-                  onClick={() => setCurrentGame('pattern')}
-                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'pattern' ? 'ring-2 ring-purple-500' : ''}`}
-                >
-                  <div className="flex items-center gap-3 mb-1">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900">Padrões</h3>
+                  {/* Filtro por Categoria */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setSelectedCategory('all')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        selectedCategory === 'all'
+                          ? 'bg-purple-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      Todos
+                    </button>
+                    <button
+                      onClick={() => setSelectedCategory('pensamento-computacional')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
+                        selectedCategory === 'pensamento-computacional'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                      }`}
+                    >
+                      <Brain className="h-4 w-4" />
+                      PC
+                    </button>
+                    <button
+                      onClick={() => setSelectedCategory('mundo-digital')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
+                        selectedCategory === 'mundo-digital'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-green-100 text-green-700 hover:bg-green-200'
+                      }`}
+                    >
+                      <Globe className="h-4 w-4" />
+                      MD
+                    </button>
+                    <button
+                      onClick={() => setSelectedCategory('cultura-digital')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
+                        selectedCategory === 'cultura-digital'
+                          ? 'bg-purple-600 text-white'
+                          : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+                      }`}
+                    >
+                      <Shield className="h-4 w-4" />
+                      CD
+                    </button>
                   </div>
-                  <p className="text-sm text-gray-600">Complete a sequência correta</p>
-                </button>
 
-                <button
-                  onClick={() => setCurrentGame('debugging')}
-                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'debugging' ? 'ring-2 ring-purple-500' : ''}`}
-                >
-                  <div className="flex items-center gap-3 mb-1">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900">Depuração</h3>
+                  {/* Filtro por Dificuldade */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setSelectedDifficulty('all')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        selectedDifficulty === 'all'
+                          ? 'bg-gray-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      Todas
+                    </button>
+                    <button
+                      onClick={() => setSelectedDifficulty('facil')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        selectedDifficulty === 'facil'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-green-100 text-green-700 hover:bg-green-200'
+                      }`}
+                    >
+                      Fácil
+                    </button>
+                    <button
+                      onClick={() => setSelectedDifficulty('medio')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        selectedDifficulty === 'medio'
+                          ? 'bg-yellow-600 text-white'
+                          : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+                      }`}
+                    >
+                      Médio
+                    </button>
                   </div>
-                  <p className="text-sm text-gray-600">Encontre o passo incorreto</p>
-                </button>
-
-                <button
-                  onClick={() => setCurrentGame('decomposition')}
-                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'decomposition' ? 'ring-2 ring-purple-500' : ''}`}
-                >
-                  <div className="flex items-center gap-3 mb-1">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900">Decomposição</h3>
-                  </div>
-                  <p className="text-sm text-gray-600">Quebre problemas em partes</p>
-                </button>
-
-                <button
-                  onClick={() => setCurrentGame('conditional')}
-                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'conditional' ? 'ring-2 ring-purple-500' : ''}`}
-                >
-                  <div className="flex items-center gap-3 mb-1">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900">Lógica Condicional</h3>
-                  </div>
-                  <p className="text-sm text-gray-600">Se/Então - Tomar decisões</p>
-                </button>
-
-                <button
-                  onClick={() => setCurrentGame('loop')}
-                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'loop' ? 'ring-2 ring-purple-500' : ''}`}
-                >
-                  <div className="flex items-center gap-3 mb-1">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900">Loops</h3>
-                  </div>
-                  <p className="text-sm text-gray-600">Repetir ações eficientemente</p>
-                </button>
-
-                <button
-                  onClick={() => setCurrentGame('battleship')}
-                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'battleship' ? 'ring-2 ring-purple-500' : ''}`}
-                >
-                  <div className="flex items-center gap-3 mb-1">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900">Batalha Naval</h3>
-                  </div>
-                  <p className="text-sm text-gray-600">Encontre os navios escondidos</p>
-                </button>
-
-                <button
-                  onClick={() => setCurrentGame('tictactoe')}
-                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'tictactoe' ? 'ring-2 ring-purple-500' : ''}`}
-                >
-                  <div className="flex items-center gap-3 mb-1">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900">Jogo da Velha</h3>
-                  </div>
-                  <p className="text-sm text-gray-600">Estratégia e lógica</p>
-                </button>
-
-                <button
-                  onClick={() => setCurrentGame('genius')}
-                  className={`text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition ${currentGame === 'genius' ? 'ring-2 ring-purple-500' : ''}`}
-                >
-                  <div className="flex items-center gap-3 mb-1">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <Gamepad2 className="h-5 w-5" style={{ color: '#7c3aed' }} />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900">Genius</h3>
-                  </div>
-                  <p className="text-sm text-gray-600">Memorize a sequência</p>
-                </button>
+                </div>
               </div>
+
+              {/* Grid de Jogos */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                {filteredGames.map((game) => (
+                  <button
+                    key={game.id}
+                    onClick={() => setCurrentGame(game.id)}
+                    className={`text-left bg-white rounded-lg shadow-sm border-2 p-4 hover:shadow-md transition-all ${
+                      currentGame === game.id ? 'border-purple-500 ring-2 ring-purple-200' : 'border-gray-200'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-lg ${getCategoryColor(game.category)}`}>
+                          {game.icon}
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">{game.name}</h3>
+                          <p className="text-sm text-gray-600">{game.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 mt-3">
+                      <span className={`px-2 py-1 rounded text-xs font-semibold ${getCategoryColor(game.category)}`}>
+                        {getCategoryIcon(game.category)}
+                        <span className="ml-1">
+                          {game.category === 'pensamento-computacional' ? 'PC' :
+                           game.category === 'mundo-digital' ? 'MD' : 'CD'}
+                        </span>
+                      </span>
+                      <span className={`px-2 py-1 rounded text-xs font-semibold ${getDifficultyBadge(game.difficulty)}`}>
+                        {game.difficulty === 'facil' ? 'Fácil' : game.difficulty === 'medio' ? 'Médio' : 'Difícil'}
+                      </span>
+                      <span className="text-xs text-gray-500 ml-auto">{game.bnccSkill}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {filteredGames.length === 0 && (
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+                  <Filter className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-500">Nenhum jogo encontrado com os filtros selecionados.</p>
+                </div>
+              )}
 
               {/* Game Display */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-                {currentGame === 'sequencing' && <SequencingGame userId={user.id} />}
-                {currentGame === 'pattern' && <PatternGame userId={user.id} />}
-                {currentGame === 'debugging' && <DebuggingGame userId={user.id} />}
-                {currentGame === 'decomposition' && <DecompositionGame userId={user.id} />}
-                {currentGame === 'conditional' && <ConditionalGame userId={user.id} />}
-                {currentGame === 'loop' && <LoopGame userId={user.id} />}
-                {currentGame === 'battleship' && <BattleshipGame userId={user.id} />}
-                {currentGame === 'tictactoe' && <TicTacToeGame userId={user.id} />}
-                {currentGame === 'genius' && <GeniusGame userId={user.id} />}
-              </div>
+              {currentGame && (
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+                  {currentGame === 'sequencing' && <SequencingGame userId={user.id} />}
+                  {currentGame === 'pattern' && <PatternGame userId={user.id} />}
+                  {currentGame === 'debugging' && <DebuggingGame userId={user.id} />}
+                  {currentGame === 'decomposition' && <DecompositionGame userId={user.id} />}
+                  {currentGame === 'conditional' && <ConditionalGame userId={user.id} />}
+                  {currentGame === 'loop' && <LoopGame userId={user.id} />}
+                  {currentGame === 'maze' && <MazeGame userId={user.id} />}
+                  {currentGame === 'geoboard' && <GeoboardGame userId={user.id} />}
+                  {currentGame === 'sudoku' && <SudokuGame userId={user.id} />}
+                  {currentGame === 'battleship' && <BattleshipGame userId={user.id} />}
+                  {currentGame === 'tictactoe' && <TicTacToeGame userId={user.id} />}
+                  {currentGame === 'genius' && <GeniusGame userId={user.id} />}
+                  {currentGame === 'security-quiz' && <SecurityQuizGame userId={user.id} />}
+                </div>
+              )}
             </div>
           )}
 
