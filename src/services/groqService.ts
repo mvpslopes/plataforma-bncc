@@ -17,11 +17,16 @@ export class GroqService {
   private model = 'llama-3.1-70b-versatile'; // Modelo rápido e eficiente do Groq
 
   constructor() {
-    // Usar variável de ambiente (obrigatória)
+    // Usar variável de ambiente (obrigatória para produção)
+    // Para desenvolvimento local, crie um arquivo .env na raiz com: VITE_GROQ_API_KEY=sua_chave
     this.apiKey = import.meta.env.VITE_GROQ_API_KEY || '';
     
     if (!this.apiKey) {
-      console.warn('VITE_GROQ_API_KEY não configurada. Configure a variável de ambiente.');
+      console.warn('⚠️ VITE_GROQ_API_KEY não configurada. O assistente usará respostas locais.');
+      console.warn('📝 Para ativar a IA, crie um arquivo .env na raiz do projeto com:');
+      console.warn('   VITE_GROQ_API_KEY=sua_chave_groq_aqui');
+    } else {
+      console.log('✅ Groq API configurada e pronta para uso.');
     }
   }
 
@@ -56,7 +61,10 @@ Seja claro, didático e sempre forneça exemplos práticos quando possível. Se 
       });
 
       if (!response.ok) {
-        throw new Error(`Groq API error: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage = errorData.error?.message || `Erro ${response.status}: ${response.statusText}`;
+        console.error('Groq API Error:', errorMessage);
+        throw new Error(`API Error: ${errorMessage}`);
       }
 
       const data: GroqResponse = await response.json();
@@ -66,7 +74,11 @@ Seja claro, didático e sempre forneça exemplos práticos quando possível. Se 
       if (!this.apiKey) {
         throw new Error('API Key do Groq não configurada. Configure VITE_GROQ_API_KEY no arquivo .env');
       }
-      throw error;
+      // Re-throw com mensagem mais amigável
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('Erro ao conectar com a API do Groq. Verifique sua conexão com a internet.');
     }
   }
 
