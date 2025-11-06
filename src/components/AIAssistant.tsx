@@ -16,6 +16,8 @@ import {
 import { useAuth } from '../contexts/LocalAuthContext';
 import { activityLogger } from '../services/ActivityLogger';
 import { groqService } from '../services/groqService';
+import { renderMarkdown } from '../utils/markdownRenderer';
+import { Sparkles, RefreshCw, AlertCircle } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -41,6 +43,9 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
+  const [apiError, setApiError] = useState(false);
+  const [usingAI, setUsingAI] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -135,7 +140,7 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
   };
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || isTyping) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -163,6 +168,8 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
     const messageContent = inputValue;
     setInputValue('');
     setIsTyping(true);
+    setApiError(false);
+    setUsingAI(true);
 
     try {
       // Preparar histórico da conversa para o Groq
@@ -175,6 +182,8 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
 
       // Chamar API do Groq
       const response = await groqService.generateResponse(messageContent, conversationHistory);
+      setUsingAI(true);
+      setIsOnline(true);
       
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -186,13 +195,16 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
       console.error('Erro ao chamar API do Groq, usando resposta padrão:', error);
+      setApiError(true);
+      setIsOnline(false);
+      setUsingAI(false);
       
       // Fallback para respostas pré-definidas em caso de erro
       const response = generateResponse(messageContent);
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'assistant',
-        content: response,
+        content: response + '\n\n*Nota: Resposta gerada localmente. A API de IA não está disponível no momento.*',
         timestamp: new Date()
       };
 
@@ -200,6 +212,19 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
     } finally {
       setIsTyping(false);
     }
+  };
+
+  const clearConversation = () => {
+    setMessages([
+      {
+        id: '1',
+        type: 'assistant',
+        content: 'Olá! Sou o Assistente da BNCC Computacional. Posso te ajudar com dúvidas sobre pensamento computacional, atividades, recursos educacionais e muito mais! Como posso te ajudar hoje?',
+        timestamp: new Date()
+      }
+    ]);
+    setApiError(false);
+    setUsingAI(false);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -241,17 +266,40 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
                 <div className="p-2 bg-white bg-opacity-20 rounded-lg">
                   <Bot className="h-5 w-5" />
                 </div>
-                <div>
-                  <h3 className="font-semibold">Assistente BNCC</h3>
-                  <p className="text-xs opacity-90">Pensamento Computacional</p>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold">Assistente BNCC</h3>
+                    {usingAI && (
+                      <span className="px-2 py-0.5 bg-green-500 rounded-full text-xs flex items-center gap-1">
+                        <Sparkles className="h-3 w-3" />
+                        IA
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <p className="text-xs opacity-90">Pensamento Computacional</p>
+                    <div className="flex items-center gap-1">
+                      <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-400' : 'bg-gray-400'}`}></div>
+                      <span className="text-xs opacity-75">{isOnline ? 'Online' : 'Offline'}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
-              >
-                <X className="h-5 w-5" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={clearConversation}
+                  className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
+                  title="Limpar conversa"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={onClose}
+                  className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
 
             {/* Messages */}
@@ -276,8 +324,10 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
                         <User className="h-4 w-4 mt-1 flex-shrink-0" />
                       )}
                       <div className="flex-1">
-                        <p className="text-sm whitespace-pre-line">{message.content}</p>
-                        <p className="text-xs opacity-70 mt-1">
+                        <div className="text-sm leading-relaxed">
+                          {message.type === 'assistant' ? renderMarkdown(message.content) : message.content}
+                        </div>
+                        <p className="text-xs opacity-70 mt-2">
                           {message.timestamp.toLocaleTimeString('pt-BR', { 
                             hour: '2-digit', 
                             minute: '2-digit' 
@@ -291,15 +341,30 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
 
               {isTyping && (
                 <div className="flex justify-start">
-                  <div className="bg-gray-100 rounded-2xl px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <Bot className="h-4 w-4" />
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl px-4 py-3 border border-purple-200">
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <Bot className="h-5 w-5 text-purple-600 animate-pulse" />
+                        <Sparkles className="h-3 w-3 text-yellow-500 absolute -top-1 -right-1 animate-spin" />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-xs text-purple-600 font-medium">IA está pensando...</span>
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
+                          <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                          <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                        </div>
                       </div>
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {apiError && messages.length > 1 && (
+                <div className="flex justify-center">
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-2 flex items-center gap-2 text-xs text-yellow-800">
+                    <AlertCircle className="h-4 w-4" />
+                    <span>Usando respostas locais. A API de IA não está disponível.</span>
                   </div>
                 </div>
               )}
@@ -308,18 +373,85 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
             </div>
 
             {/* Quick Actions */}
-            <div className="p-4 border-t border-gray-200">
-              <div className="grid grid-cols-2 gap-2 mb-3">
-                {quickActions.map((action, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setInputValue(action.action)}
-                    className="flex items-center gap-2 p-2 text-xs bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
-                  >
-                    <action.icon className="h-3 w-3 text-blue-600" />
-                    <span className="truncate">{action.label}</span>
-                  </button>
-                ))}
+            <div className="p-4 border-t border-gray-200 bg-gray-50">
+              <div className="mb-3">
+                <p className="text-xs text-gray-600 mb-2 font-medium">💡 Sugestões rápidas:</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {quickActions.map((action, index) => (
+                    <button
+                      key={index}
+                      onClick={async () => {
+                        const userMessage: Message = {
+                          id: Date.now().toString(),
+                          type: 'user',
+                          content: action.action,
+                          timestamp: new Date()
+                        };
+                        setMessages(prev => [...prev, userMessage]);
+                        
+                        if (user) {
+                          activityLogger.logActivity(
+                            user.id, 
+                            user.name, 
+                            user.email, 
+                            'search', 
+                            'assistant', 
+                            'ai-assistant', 
+                            'Assistente BNCC', 
+                            `Pergunta: "${action.action}"`
+                          );
+                        }
+                        
+                        setIsTyping(true);
+                        setApiError(false);
+                        setUsingAI(true);
+
+                        try {
+                          const conversationHistory = messages
+                            .slice(-6)
+                            .map(msg => ({
+                              role: msg.type === 'user' ? 'user' as const : 'assistant' as const,
+                              content: msg.content,
+                            }));
+
+                          const response = await groqService.generateResponse(action.action, conversationHistory);
+                          setUsingAI(true);
+                          setIsOnline(true);
+                          
+                          const assistantMessage: Message = {
+                            id: (Date.now() + 1).toString(),
+                            type: 'assistant',
+                            content: response,
+                            timestamp: new Date()
+                          };
+
+                          setMessages(prev => [...prev, assistantMessage]);
+                        } catch (error) {
+                          console.error('Erro ao chamar API do Groq:', error);
+                          setApiError(true);
+                          setIsOnline(false);
+                          setUsingAI(false);
+                          
+                          const response = generateResponse(action.action);
+                          const assistantMessage: Message = {
+                            id: (Date.now() + 1).toString(),
+                            type: 'assistant',
+                            content: response + '\n\n*Nota: Resposta gerada localmente. A API de IA não está disponível no momento.*',
+                            timestamp: new Date()
+                          };
+
+                          setMessages(prev => [...prev, assistantMessage]);
+                        } finally {
+                          setIsTyping(false);
+                        }
+                      }}
+                      className="flex items-center gap-2 p-2 text-xs bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg transition-all shadow-sm hover:shadow"
+                    >
+                      <action.icon className="h-3 w-3 text-blue-600 flex-shrink-0" />
+                      <span className="truncate text-left">{action.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Input */}
@@ -329,17 +461,24 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Digite sua pergunta..."
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  placeholder="Digite sua pergunta sobre BNCC Computacional..."
+                  disabled={isTyping}
+                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
                 />
                 <button
                   onClick={handleSendMessage}
-                  disabled={!inputValue.trim()}
-                  className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  disabled={!inputValue.trim() || isTyping}
+                  className="p-2.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg disabled:shadow-none"
                 >
                   <Send className="h-4 w-4" />
                 </button>
               </div>
+              {usingAI && (
+                <p className="text-xs text-gray-500 mt-2 text-center flex items-center justify-center gap-1">
+                  <Sparkles className="h-3 w-3" />
+                  Powered by Groq AI
+                </p>
+              )}
             </div>
           </motion.div>
         </motion.div>
