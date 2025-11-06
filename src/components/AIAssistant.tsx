@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../contexts/LocalAuthContext';
 import { activityLogger } from '../services/ActivityLogger';
+import { groqService } from '../services/groqService';
 
 interface Message {
   id: string;
@@ -159,12 +160,22 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
       );
     }
     
+    const messageContent = inputValue;
     setInputValue('');
     setIsTyping(true);
 
-    // Simular delay de resposta
-    setTimeout(() => {
-      const response = generateResponse(inputValue);
+    try {
+      // Preparar histórico da conversa para o Groq
+      const conversationHistory = messages
+        .slice(-6) // Últimas 6 mensagens para contexto
+        .map(msg => ({
+          role: msg.type === 'user' ? 'user' as const : 'assistant' as const,
+          content: msg.content,
+        }));
+
+      // Chamar API do Groq
+      const response = await groqService.generateResponse(messageContent, conversationHistory);
+      
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'assistant',
@@ -173,8 +184,22 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
       };
 
       setMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('Erro ao chamar API do Groq, usando resposta padrão:', error);
+      
+      // Fallback para respostas pré-definidas em caso de erro
+      const response = generateResponse(messageContent);
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'assistant',
+        content: response,
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1000 + Math.random() * 2000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
