@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../contexts/LocalAuthContext';
 import { activityLogger } from '../services/ActivityLogger';
-import { groqService } from '../services/groqService';
+// import { groqService } from '../services/groqService'; // Desabilitado - usando apenas respostas pré-definidas
 import { renderMarkdown } from '../utils/markdownRenderer';
 import { Sparkles, RefreshCw, AlertCircle } from 'lucide-react';
 
@@ -56,18 +56,10 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
     scrollToBottom();
   }, [messages]);
 
-  // Verificar status da API ao carregar
+  // Usando apenas respostas pré-definidas por enquanto
   useEffect(() => {
-    const checkAPIStatus = () => {
-      const isAvailable = groqService.isAvailable();
-      setIsOnline(isAvailable);
-      setUsingAI(isAvailable);
-      if (!isAvailable) {
-        console.warn('⚠️ API do Groq não disponível. Verifique a configuração.');
-      }
-    };
-    
-    checkAPIStatus();
+    setIsOnline(false);
+    setUsingAI(false);
   }, []);
 
   const generateResponse = (userMessage: string): string => {
@@ -183,59 +175,23 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
     setInputValue('');
     setIsTyping(true);
     setApiError(false);
-    setUsingAI(true);
+    setUsingAI(false); // Usando respostas locais
+    setIsOnline(false); // Modo offline com respostas pré-definidas
 
-    try {
-      // Preparar histórico da conversa para o Groq
-      const conversationHistory = messages
-        .slice(-6) // Últimas 6 mensagens para contexto
-        .map(msg => ({
-          role: msg.type === 'user' ? 'user' as const : 'assistant' as const,
-          content: msg.content,
-        }));
+    // Simular delay de resposta para melhor UX
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Chamar API do Groq
-      const response = await groqService.generateResponse(messageContent, conversationHistory);
-      setUsingAI(true);
-      setIsOnline(true);
-      
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'assistant',
-        content: response,
-        timestamp: new Date()
-      };
+    // Usar apenas respostas pré-definidas
+    const response = generateResponse(messageContent);
+    const assistantMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      type: 'assistant',
+      content: response,
+      timestamp: new Date()
+    };
 
-      setMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
-      console.error('Erro ao chamar API do Groq, usando resposta padrão:', error);
-      setApiError(true);
-      setIsOnline(false);
-      setUsingAI(false);
-      
-      // Verificar tipo de erro
-      let errorNote = '*Nota: Resposta gerada localmente. A API de IA não está disponível no momento.*';
-      if (error instanceof Error) {
-        if (error.message.includes('Invalid API Key') || error.message.includes('401')) {
-          errorNote = '*Nota: Chave da API inválida ou expirada. Verifique a configuração no Vercel ou arquivo .env.*';
-        } else if (error.message.includes('não configurada')) {
-          errorNote = '*Nota: API Key não configurada. Configure VITE_GROQ_API_KEY no arquivo .env ou no Vercel.*';
-        }
-      }
-      
-      // Fallback para respostas pré-definidas em caso de erro
-      const response = generateResponse(messageContent);
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'assistant',
-        content: response + '\n\n' + errorNote,
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, assistantMessage]);
-    } finally {
-      setIsTyping(false);
-    }
+    setMessages(prev => [...prev, assistantMessage]);
+    setIsTyping(false);
   };
 
   const clearConversation = () => {
@@ -428,46 +384,23 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
                         
                         setIsTyping(true);
                         setApiError(false);
-                        setUsingAI(true);
+                        setUsingAI(false);
+                        setIsOnline(false);
 
-                        try {
-                          const conversationHistory = messages
-                            .slice(-6)
-                            .map(msg => ({
-                              role: msg.type === 'user' ? 'user' as const : 'assistant' as const,
-                              content: msg.content,
-                            }));
+                        // Simular delay de resposta
+                        await new Promise(resolve => setTimeout(resolve, 500));
 
-                          const response = await groqService.generateResponse(action.action, conversationHistory);
-                          setUsingAI(true);
-                          setIsOnline(true);
-                          
-                          const assistantMessage: Message = {
-                            id: (Date.now() + 1).toString(),
-                            type: 'assistant',
-                            content: response,
-                            timestamp: new Date()
-                          };
+                        // Usar apenas respostas pré-definidas
+                        const response = generateResponse(action.action);
+                        const assistantMessage: Message = {
+                          id: (Date.now() + 1).toString(),
+                          type: 'assistant',
+                          content: response,
+                          timestamp: new Date()
+                        };
 
-                          setMessages(prev => [...prev, assistantMessage]);
-                        } catch (error) {
-                          console.error('Erro ao chamar API do Groq:', error);
-                          setApiError(true);
-                          setIsOnline(false);
-                          setUsingAI(false);
-                          
-                          const response = generateResponse(action.action);
-                          const assistantMessage: Message = {
-                            id: (Date.now() + 1).toString(),
-                            type: 'assistant',
-                            content: response + '\n\n*Nota: Resposta gerada localmente. A API de IA não está disponível no momento.*',
-                            timestamp: new Date()
-                          };
-
-                          setMessages(prev => [...prev, assistantMessage]);
-                        } finally {
-                          setIsTyping(false);
-                        }
+                        setMessages(prev => [...prev, assistantMessage]);
+                        setIsTyping(false);
                       }}
                       className="flex items-center gap-2 p-2 text-xs bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg transition-all shadow-sm hover:shadow"
                     >
