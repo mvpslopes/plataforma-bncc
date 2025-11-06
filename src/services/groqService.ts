@@ -25,9 +25,16 @@ export class GroqService {
       console.warn('⚠️ VITE_GROQ_API_KEY não configurada. O assistente usará respostas locais.');
       console.warn('📝 Para ativar a IA, crie um arquivo .env na raiz do projeto com:');
       console.warn('   VITE_GROQ_API_KEY=sua_chave_groq_aqui');
+      console.warn('📝 Ou configure a variável no Vercel: Settings → Environment Variables');
     } else {
       console.log('✅ Groq API configurada e pronta para uso.');
+      console.log('🔑 Chave detectada:', this.apiKey.substring(0, 10) + '...');
     }
+  }
+
+  // Método para verificar se a API está disponível
+  isAvailable(): boolean {
+    return !!this.apiKey && this.apiKey.length > 0;
   }
 
   async chat(messages: GroqMessage[]): Promise<string> {

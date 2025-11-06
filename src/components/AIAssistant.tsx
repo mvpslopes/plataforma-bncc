@@ -56,6 +56,20 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
     scrollToBottom();
   }, [messages]);
 
+  // Verificar status da API ao carregar
+  useEffect(() => {
+    const checkAPIStatus = () => {
+      const isAvailable = groqService.isAvailable();
+      setIsOnline(isAvailable);
+      setUsingAI(isAvailable);
+      if (!isAvailable) {
+        console.warn('⚠️ API do Groq não disponível. Verifique a configuração.');
+      }
+    };
+    
+    checkAPIStatus();
+  }, []);
+
   const generateResponse = (userMessage: string): string => {
     const message = userMessage.toLowerCase();
     
@@ -199,12 +213,22 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
       setIsOnline(false);
       setUsingAI(false);
       
+      // Verificar tipo de erro
+      let errorNote = '*Nota: Resposta gerada localmente. A API de IA não está disponível no momento.*';
+      if (error instanceof Error) {
+        if (error.message.includes('Invalid API Key') || error.message.includes('401')) {
+          errorNote = '*Nota: Chave da API inválida ou expirada. Verifique a configuração no Vercel ou arquivo .env.*';
+        } else if (error.message.includes('não configurada')) {
+          errorNote = '*Nota: API Key não configurada. Configure VITE_GROQ_API_KEY no arquivo .env ou no Vercel.*';
+        }
+      }
+      
       // Fallback para respostas pré-definidas em caso de erro
       const response = generateResponse(messageContent);
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'assistant',
-        content: response + '\n\n*Nota: Resposta gerada localmente. A API de IA não está disponível no momento.*',
+        content: response + '\n\n' + errorNote,
         timestamp: new Date()
       };
 
