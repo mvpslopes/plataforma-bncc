@@ -22,14 +22,19 @@ npm run dev
 
 1. Acesse o dashboard do Vercel: https://vercel.com/dashboard
 2. Selecione o projeto "plataforma-bncc"
-3. Vá em **Settings** → **Environment Variables**
-4. Clique em **Add New**
-5. Configure:
+3. **Na barra superior, clique em "Settings"**
+4. **No menu lateral esquerdo, clique em "Environment Variables"**
+5. Clique em **Add New**
+6. Configure:
    - **Name**: `VITE_GROQ_API_KEY`
-   - **Value**: `sua_chave_groq_aqui` (use a chave fornecida)
+   - **Value**: `sua_chave_groq_aqui` (use a chave fornecida anteriormente)
    - **Environment**: Production, Preview, Development (marque todos)
-6. Clique em **Save**
-7. Faça um novo deploy
+7. Clique em **Save**
+8. **Para aplicar as mudanças, faça um novo deploy:**
+   - Vá em **Deployments** na barra superior
+   - Clique nos três pontos (⋯) do último deployment
+   - Selecione **"Redeploy"**
+   - Ou faça um novo commit no Git para acionar deploy automático
 
 ## ✅ Verificar se está funcionando
 
