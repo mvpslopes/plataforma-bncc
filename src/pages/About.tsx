@@ -8,7 +8,6 @@ import {
   Shield,
   CheckCircle,
   Star,
-  ArrowRight,
   Mail,
   Phone,
   MapPin,
@@ -391,25 +390,6 @@ export const About = ({ onBackToHome }: AboutProps) => {
             </motion.div>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-            className="text-center mt-12"
-          >
-            <button 
-              onClick={() => {
-                console.log('Botão clicado, navegando para home...');
-                // Navegar para a página inicial com hash
-                window.location.href = '/#formulario-contato';
-              }}
-              className="bg-white text-blue-600 font-bold px-8 py-4 rounded-2xl hover:bg-yellow-300 transition-colors shadow-lg flex items-center gap-2 mx-auto"
-            >
-              <span>Entrar em Contato</span>
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </motion.div>
         </div>
       </div>
     </div>

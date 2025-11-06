@@ -21,58 +21,6 @@ export const Home = ({ onLoginClick, onNavigateToAbout }: HomeProps) => {
     }
   };
 
-  const scrollToContactForm = () => {
-    const contactFormElement = document.getElementById('formulario-contato');
-    console.log('Procurando formulário de contato:', contactFormElement);
-    if (contactFormElement) {
-      console.log('Formulário encontrado, fazendo scroll...');
-      contactFormElement.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-    } else {
-      console.log('Formulário não encontrado!');
-    }
-  };
-
-  // Verificar se há hash na URL e fazer scroll para o formulário de contato
-  React.useEffect(() => {
-    const handleScrollToContact = () => {
-      if (window.location.hash === '#formulario-contato') {
-        console.log('Hash detectado: #formulario-contato');
-        // Tentar múltiplas vezes com intervalos diferentes
-        const tryScroll = (attempts = 0) => {
-          const contactFormElement = document.getElementById('formulario-contato');
-          console.log(`Tentativa ${attempts + 1}:`, contactFormElement);
-          
-          if (contactFormElement) {
-            console.log('Formulário encontrado, fazendo scroll...');
-            contactFormElement.scrollIntoView({ 
-              behavior: 'smooth',
-              block: 'start'
-            });
-          } else if (attempts < 10) {
-            console.log('Formulário não encontrado, tentando novamente...');
-            setTimeout(() => tryScroll(attempts + 1), 500);
-          } else {
-            console.log('Formulário não encontrado após 10 tentativas');
-          }
-        };
-        
-        setTimeout(() => tryScroll(), 1000);
-      }
-    };
-
-    // Verificar hash inicial
-    handleScrollToContact();
-
-    // Escutar mudanças no hash
-    window.addEventListener('hashchange', handleScrollToContact);
-
-    return () => {
-      window.removeEventListener('hashchange', handleScrollToContact);
-    };
-  }, []);
 
   return (
     <div className="min-h-screen">

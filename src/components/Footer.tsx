@@ -1,4 +1,4 @@
-import { BookOpen, Mail, Phone, MapPin } from 'lucide-react';
+import { BookOpen, Mail, Phone } from 'lucide-react';
 
 export const Footer = () => {
   return (
@@ -81,10 +81,6 @@ export const Footer = () => {
               <li className="flex items-center space-x-2">
                 <Phone className="w-4 h-4" style={{ color: '#ffbe00' }} />
                 <span>+55 (31) 9 8013-7143</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4" style={{ color: '#ffbe00' }} />
-                <span>Conselheiro Lafaiete - MG</span>
               </li>
             </ul>
           </div>

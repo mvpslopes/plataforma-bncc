@@ -19,16 +19,28 @@ export class GroqService {
   constructor() {
     // Usar variável de ambiente (obrigatória para produção)
     // Para desenvolvimento local, crie um arquivo .env na raiz com: VITE_GROQ_API_KEY=sua_chave
-    this.apiKey = import.meta.env.VITE_GROQ_API_KEY || '';
+    let envKey = import.meta.env.VITE_GROQ_API_KEY;
+    
+    // Debug: verificar o que está sendo lido
+    console.log('🔍 Debug - Verificando variável de ambiente:');
+    console.log('  - import.meta.env.VITE_GROQ_API_KEY existe?', !!envKey);
+    console.log('  - Tipo:', typeof envKey);
+    console.log('  - Valor (primeiros 10 chars):', envKey ? envKey.substring(0, 10) + '...' : 'undefined');
+    console.log('  - Todos os env vars VITE_*:', Object.keys(import.meta.env).filter(k => k.startsWith('VITE_')));
+    
+    this.apiKey = envKey || '';
     
     if (!this.apiKey) {
       console.warn('⚠️ VITE_GROQ_API_KEY não configurada. O assistente usará respostas locais.');
-      console.warn('📝 Para ativar a IA, crie um arquivo .env na raiz do projeto com:');
-      console.warn('   VITE_GROQ_API_KEY=sua_chave_groq_aqui');
+      console.warn('📝 Para ativar a IA:');
+      console.warn('   1. Crie um arquivo .env na raiz do projeto');
+      console.warn('   2. Adicione: VITE_GROQ_API_KEY=sua_chave_groq_aqui');
+      console.warn('   3. REINICIE o servidor (npm run dev)');
       console.warn('📝 Ou configure a variável no Vercel: Settings → Environment Variables');
     } else {
       console.log('✅ Groq API configurada e pronta para uso.');
-      console.log('🔑 Chave detectada:', this.apiKey.substring(0, 10) + '...');
+      console.log('🔑 Chave detectada:', this.apiKey.substring(0, 15) + '...');
+      console.log('📏 Tamanho da chave:', this.apiKey.length, 'caracteres');
     }
   }
 
