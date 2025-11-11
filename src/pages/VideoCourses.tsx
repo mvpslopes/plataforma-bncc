@@ -2,22 +2,30 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Clock, BookOpen } from 'lucide-react';
 import { useAuth } from '../contexts/LocalAuthContext';
-import { VideoCourse } from '../types/bncc';
+import { VideoCourse, Activity } from '../types/bncc';
 
 export const VideoCourses = () => {
-  const { getVideoCourses, getUserProgress, updateUserProgress, user, getSchoolYears } = useAuth();
+  const { getVideoCourses, getActivities, getUserProgress, updateUserProgress, user, getSchoolYears } = useAuth();
   const [videos, setVideos] = useState<VideoCourse[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
+  const [selectedVideo, setSelectedVideo] = useState<{ url: string; title: string } | null>(null);
 
   useEffect(() => {
     loadVideos();
+    loadActivities();
   }, []);
 
   const loadVideos = async () => {
     const videoCourses = getVideoCourses();
     setVideos(videoCourses);
     setLoading(false);
+  };
+
+  const loadActivities = () => {
+    const allActivities = getActivities();
+    setActivities(allActivities);
   };
 
   const schoolYears = getSchoolYears();
@@ -112,12 +120,13 @@ export const VideoCourses = () => {
               Conteúdo funcional desenvolvido pela Nova Edu
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {filteredVideos.filter(video => 
-                video.id === 'atv006' || video.id === 'atv007' || 
-                video.id === 'atv008' || video.id === 'atv009'
-              ).map((video, index) => (
+              {activities.filter(activity => 
+                (activity.id === 'atv006' || activity.id === 'atv007' || 
+                 activity.id === 'atv008' || activity.id === 'atv009') &&
+                activity.video_url
+              ).map((activity, index) => (
                 <motion.div
-                  key={video.id}
+                  key={activity.id}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.1 }}
@@ -125,14 +134,18 @@ export const VideoCourses = () => {
                 >
                   <div className="relative">
                     <img
-                      src={video.thumbnail_url}
-                      alt={video.title}
+                      src={activity.thumbnail_url}
+                      alt={activity.title}
                       className="w-full h-32 object-cover"
                       loading="lazy"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = `https://via.placeholder.com/400x225/4F46E5/FFFFFF?text=${encodeURIComponent(activity.title)}`;
+                      }}
                     />
                     {/* Anos escolares sobre a miniatura */}
                     <div className="absolute bottom-2 left-2 right-2 flex gap-1 flex-wrap">
-                      {video.schoolYears.map((yearId) => (
+                      {activity.schoolYears.map((yearId) => (
                         <span
                           key={yearId}
                           className="bg-white/90 text-gray-800 border border-gray-200 px-1.5 py-0.5 rounded text-[10px] font-medium shadow-sm"
@@ -141,9 +154,14 @@ export const VideoCourses = () => {
                         </span>
                       ))}
                     </div>
-                    <div className="absolute top-2 left-2">
+                    <div className="absolute top-2 left-2 flex gap-1">
                       <span className="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium">
                         Real
+                      </span>
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                        activity.type === 'plugada' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'
+                      }`}>
+                        {activity.type === 'plugada' ? 'Plugada' : 'Desplugada'}
                       </span>
                     </div>
                     <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
@@ -154,16 +172,32 @@ export const VideoCourses = () => {
                   </div>
                   <div className="p-3">
                     <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-2">
-                      {video.title}
+                      {activity.title}
                     </h3>
                     <p className="text-xs text-gray-600 line-clamp-2">
-                      {video.description}
+                      {activity.description}
                     </p>
-                    <div className="mt-2 flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-gray-500" />
-                      <span className="text-xs text-gray-500">
-                        {Math.floor(video.duration / 60)} min
-                      </span>
+                    <div className="mt-3 flex items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-gray-500" />
+                        <span className="text-xs text-gray-500">
+                          {activity.duration} min
+                        </span>
+                      </div>
+                      {activity.video_url && (
+                        <button
+                          onClick={() => {
+                            setSelectedVideo({ url: activity.video_url!, title: activity.title });
+                            if (user) {
+                              updateUserProgress(user.id, activity.id, false);
+                            }
+                          }}
+                          className="flex items-center gap-1 bg-sky-600 text-white px-3 py-1.5 rounded-lg hover:bg-sky-700 transition-colors text-xs font-medium"
+                        >
+                          <Play className="w-3 h-3" />
+                          Assistir
+                        </button>
+                      )}
                     </div>
                   </div>
                 </motion.div>
@@ -267,6 +301,59 @@ export const VideoCourses = () => {
           </motion.div>
         )}
       </div>
+
+      {/* Video Viewer Modal */}
+      {selectedVideo && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h3 className="text-lg font-semibold text-gray-900">
+                {selectedVideo.title}
+              </h3>
+              <button
+                onClick={() => setSelectedVideo(null)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4">
+              {selectedVideo.url.includes('vimeo.com') ? (
+                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                  <iframe
+                    src={`https://player.vimeo.com/video/${selectedVideo.url.split('/').pop()}?autoplay=1&title=0&byline=0&portrait=0`}
+                    className="absolute top-0 left-0 w-full h-full rounded-lg"
+                    frameBorder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              ) : selectedVideo.url.includes('youtube.com') || selectedVideo.url.includes('youtu.be') ? (
+                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                  <iframe
+                    src={`https://www.youtube.com/embed/${selectedVideo.url.includes('youtu.be') ? selectedVideo.url.split('/').pop()?.split('?')[0] : selectedVideo.url.split('v=')[1]?.split('&')[0]}?autoplay=1`}
+                    className="absolute top-0 left-0 w-full h-full rounded-lg"
+                    frameBorder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              ) : (
+                <video
+                  controls
+                  className="w-full h-auto max-h-[70vh] rounded-lg"
+                  preload="metadata"
+                >
+                  <source src={selectedVideo.url} type="video/mp4" />
+                  Seu navegador não suporta o elemento de vídeo.
+                </video>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

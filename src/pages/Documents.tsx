@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Download, File, BookOpen, Eye } from 'lucide-react';
 import { useAuth } from '../contexts/LocalAuthContext';
-import { Document } from '../types/bncc';
+import { Document, Activity } from '../types/bncc';
 import { SecurePDFViewer } from '../components/SecurePDFViewer';
 import { activityLogger } from '../services/ActivityLogger';
 
@@ -19,20 +19,27 @@ const fileTypeColors = {
 };
 
 export const Documents = () => {
-  const { getDocuments, getSchoolYears, user } = useAuth();
+  const { getDocuments, getActivities, getSchoolYears, user } = useAuth();
   const [documents, setDocuments] = useState<Document[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
   const [selectedPDF, setSelectedPDF] = useState<{ url: string; title: string } | null>(null);
 
   useEffect(() => {
     loadDocuments();
+    loadActivities();
   }, []);
 
   const loadDocuments = async () => {
     const docs = getDocuments();
     setDocuments(docs);
     setLoading(false);
+  };
+
+  const loadActivities = () => {
+    const allActivities = getActivities();
+    setActivities(allActivities);
   };
 
   const schoolYears = getSchoolYears();
@@ -155,60 +162,90 @@ export const Documents = () => {
               Materiais pedagógicos funcionais desenvolvidos pela Nova Edu
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {filteredDocuments.filter(doc => 
-                doc.id === 'doc006' || doc.id === 'doc007' || 
-                doc.id === 'doc008' || doc.id === 'doc009'
-              ).map((doc, index) => (
-                <motion.div
-                  key={doc.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-gray-50 rounded-lg border border-gray-200 p-4 hover:shadow-sm transition-all duration-300"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <span className="text-sm">{fileTypeIcons[doc.file_type]}</span>
+              {activities.filter(activity => 
+                (activity.id === 'atv006' || activity.id === 'atv007' || 
+                 activity.id === 'atv008' || activity.id === 'atv009') &&
+                activity.document_url
+              ).map((activity, index) => {
+                const fileType = activity.document_url?.endsWith('.pdf') ? 'pdf' : 
+                                 activity.document_url?.endsWith('.docx') ? 'docx' : 
+                                 activity.document_url?.endsWith('.pptx') ? 'pptx' : 'pdf';
+                
+                return (
+                  <motion.div
+                    key={activity.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="bg-gray-50 rounded-lg border border-gray-200 p-4 hover:shadow-sm transition-all duration-300"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0">
+                        <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                          <span className="text-sm">{fileTypeIcons[fileType]}</span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
-                          Real
-                        </span>
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${fileTypeColors[doc.file_type]}`}>
-                          {doc.file_type.toUpperCase()}
-                        </span>
-                      </div>
-                      <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-2">
-                        {doc.title}
-                      </h3>
-                      <p className="text-xs text-gray-600 line-clamp-2 mb-3">
-                        {doc.description}
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <button 
-                          onClick={() => handleViewPDF(doc)}
-                          className="flex items-center gap-1 text-blue-600 hover:text-blue-700 text-xs font-medium"
-                        >
-                          <Eye className="w-3 h-3" />
-                          {doc.file_type === 'pdf' ? 'Ver' : 'Abrir'}
-                        </button>
-                        {user?.role === 'admin' && (
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
+                            Real
+                          </span>
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${fileTypeColors[fileType]}`}>
+                            {fileType.toUpperCase()}
+                          </span>
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${
+                            activity.type === 'plugada' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'
+                          }`}>
+                            {activity.type === 'plugada' ? 'Plugada' : 'Desplugada'}
+                          </span>
+                        </div>
+                        <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-2">
+                          {activity.title}
+                        </h3>
+                        <p className="text-xs text-gray-600 line-clamp-2 mb-3">
+                          {activity.description}
+                        </p>
+                        <div className="flex items-center gap-2">
                           <button 
-                            onClick={() => handleDownload(doc)}
-                            className="flex items-center gap-1 text-sky-600 hover:text-sky-700 text-xs font-medium"
+                            onClick={() => {
+                              if (activity.document_url) {
+                                setSelectedPDF({ url: activity.document_url, title: activity.title });
+                                if (user) {
+                                  activityLogger.logViewDocument(user.id, user.name, user.email, activity.id, activity.title);
+                                }
+                              }
+                            }}
+                            className="flex items-center gap-1 text-blue-600 hover:text-blue-700 text-xs font-medium"
                           >
-                            <Download className="w-3 h-3" />
-                            Baixar
+                            <Eye className="w-3 h-3" />
+                            {fileType === 'pdf' ? 'Ver' : 'Abrir'}
                           </button>
-                        )}
+                          {user?.role === 'admin' && activity.document_url && (
+                            <button 
+                              onClick={() => {
+                                const link = document.createElement('a');
+                                link.href = activity.document_url!;
+                                link.download = activity.title;
+                                link.target = '_blank';
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                                if (user) {
+                                  activityLogger.logDownload(user.id, user.name, user.email, 'document', activity.id, activity.title);
+                                }
+                              }}
+                              className="flex items-center gap-1 text-sky-600 hover:text-sky-700 text-xs font-medium"
+                            >
+                              <Download className="w-3 h-3" />
+                              Baixar
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </motion.div>
